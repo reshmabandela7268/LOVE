@@ -1,0 +1,3007 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FriendVerse — WhatsApp Style</title>
+
+    <!-- Font & Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+    <style>
+        /* ----- RESET & BASE ----- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #0b141a;
+            color: #e8edf5;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+        ::-webkit-scrollbar {
+            width: 4px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #2a3942;
+            border-radius: 10px;
+        }
+
+        #app {
+            width: 100%;
+            max-width: 1400px;
+            height: 100vh;
+            max-height: 920px;
+            background: #111b21;
+            border-radius: 28px;
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.8);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            position: relative;
+            margin: 12px;
+        }
+
+        /* ----- LOGIN SCREEN ----- */
+        #loginScreen {
+            position: absolute;
+            inset: 0;
+            z-index: 100;
+            background: rgba(11, 20, 26, 0.95);
+            backdrop-filter: blur(16px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            border-radius: 28px;
+            transition: opacity 0.5s ease, visibility 0.5s ease;
+        }
+        #loginScreen.hidden {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+        .login-box {
+            background: #1f2c33;
+            padding: 48px 40px;
+            border-radius: 28px;
+            width: 100%;
+            max-width: 420px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+            border: 1px solid #2a3942;
+        }
+        .login-box .logo {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .login-box .logo i {
+            font-size: 48px;
+            color: #25d366;
+        }
+        .login-box h1 {
+            font-size: 26px;
+            font-weight: 700;
+            text-align: center;
+            background: linear-gradient(135deg, #25d366, #128c7e);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .login-box p.sub {
+            color: #8696a0;
+            font-size: 14px;
+            text-align: center;
+            margin-bottom: 28px;
+        }
+        .login-box label {
+            font-size: 13px;
+            font-weight: 600;
+            color: #d1d7db;
+            display: block;
+            margin-bottom: 4px;
+        }
+        .login-box input {
+            width: 100%;
+            padding: 12px 16px;
+            border-radius: 14px;
+            border: 1px solid #2a3942;
+            background: #0b141a;
+            color: #e8edf5;
+            font-size: 15px;
+            transition: border 0.2s;
+            outline: none;
+            margin-bottom: 16px;
+        }
+        .login-box input:focus {
+            border-color: #25d366;
+        }
+        .login-box .btn-primary {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 14px;
+            background: linear-gradient(135deg, #25d366, #128c7e);
+            color: #fff;
+            font-weight: 700;
+            font-size: 16px;
+            cursor: pointer;
+            transition: transform 0.15s, box-shadow 0.15s;
+        }
+        .login-box .btn-primary:hover {
+            transform: scale(1.02);
+            box-shadow: 0 8px 24px rgba(37, 211, 102, 0.3);
+        }
+        .login-error {
+            color: #f87171;
+            font-size: 13px;
+            margin-top: -8px;
+            margin-bottom: 12px;
+            display: none;
+            text-align: center;
+        }
+
+        /* ----- MAIN LAYOUT ----- */
+        #mainApp {
+            display: flex;
+            height: 100%;
+            width: 100%;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+        #mainApp.visible {
+            opacity: 1;
+        }
+
+        /* ----- SIDEBAR ----- */
+        .sidebar {
+            width: 320px;
+            min-width: 320px;
+            background: #111b21;
+            border-right: 1px solid #1f2c33;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        .sidebar-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 20px;
+            background: #1f2c33;
+            border-bottom: 1px solid #2a3942;
+            min-height: 72px;
+        }
+        .sidebar-header .profile-wrap {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+        }
+        .sidebar-header .profile-wrap .avatar {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: #2a3942;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 18px;
+            color: #e8edf5;
+            overflow: hidden;
+            flex-shrink: 0;
+            position: relative;
+        }
+        .sidebar-header .profile-wrap .avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .sidebar-header .profile-wrap .info .name {
+            font-weight: 600;
+            font-size: 15px;
+        }
+        .sidebar-header .profile-wrap .info .status-text {
+            font-size: 12px;
+            color: #8696a0;
+            max-width: 140px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        .sidebar-header .actions {
+            display: flex;
+            gap: 4px;
+        }
+        .sidebar-header .actions button {
+            background: transparent;
+            border: none;
+            color: #aebac1;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 18px;
+            transition: background 0.15s;
+        }
+        .sidebar-header .actions button:hover {
+            background: #2a3942;
+        }
+
+        .sidebar-tabs {
+            display: flex;
+            border-bottom: 1px solid #1f2c33;
+            background: #111b21;
+        }
+        .sidebar-tabs button {
+            flex: 1;
+            padding: 10px 0;
+            background: transparent;
+            border: none;
+            color: #aebac1;
+            font-weight: 600;
+            font-size: 13px;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            transition: all 0.2s;
+        }
+        .sidebar-tabs button.active {
+            color: #25d366;
+            border-bottom-color: #25d366;
+        }
+        .sidebar-tabs button:hover {
+            background: #1f2c33;
+        }
+
+        .search-box {
+            padding: 8px 16px;
+            background: #111b21;
+        }
+        .search-box input {
+            width: 100%;
+            padding: 8px 16px;
+            border-radius: 20px;
+            border: none;
+            background: #1f2c33;
+            color: #e8edf5;
+            font-size: 14px;
+            outline: none;
+        }
+        .search-box input::placeholder {
+            color: #8696a0;
+        }
+
+        .user-list-container {
+            flex: 1;
+            overflow-y: auto;
+            padding: 4px 0;
+        }
+        .user-list {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .user-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 16px;
+            cursor: pointer;
+            transition: background 0.1s;
+            border-left: 3px solid transparent;
+        }
+        .user-item:hover {
+            background: #1f2c33;
+        }
+        .user-item.active {
+            background: #2a3942;
+            border-left-color: #25d366;
+        }
+        .user-item .avatar {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: #2a3942;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 16px;
+            color: #e8edf5;
+            flex-shrink: 0;
+            overflow: hidden;
+            position: relative;
+        }
+        .user-item .avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .user-item .avatar .online-dot {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: #4a5568;
+            border: 2px solid #111b21;
+        }
+        .user-item .avatar .online-dot.online {
+            background: #25d366;
+        }
+        .user-item .info {
+            flex: 1;
+            min-width: 0;
+        }
+        .user-item .info .name {
+            font-weight: 600;
+            font-size: 14px;
+        }
+        .user-item .info .last-msg {
+            font-size: 13px;
+            color: #8696a0;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .user-item .info .last-msg .sender {
+            color: #aebac1;
+        }
+        .user-item .meta {
+            text-align: right;
+            flex-shrink: 0;
+            min-width: 40px;
+        }
+        .user-item .meta .time {
+            font-size: 11px;
+            color: #8696a0;
+        }
+        .user-item .meta .unread {
+            background: #25d366;
+            color: #111b21;
+            font-size: 11px;
+            font-weight: 700;
+            padding: 2px 8px;
+            border-radius: 40px;
+            display: inline-block;
+            margin-top: 4px;
+        }
+        .user-item .status-indicator {
+            font-size: 18px;
+            margin-left: 4px;
+        }
+
+        /* ----- CHAT AREA ----- */
+        .chat-area {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: #0b141a;
+            min-width: 0;
+        }
+        .chat-area .empty-state {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            color: #8696a0;
+            gap: 12px;
+        }
+        .chat-area .empty-state i {
+            font-size: 56px;
+            opacity: 0.3;
+        }
+
+        .chat-header {
+            padding: 12px 20px;
+            border-bottom: 1px solid #1f2c33;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: #1f2c33;
+            min-height: 64px;
+        }
+        .chat-header .chat-with {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+        }
+        .chat-header .chat-with .avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #2a3942;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 16px;
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+        .chat-header .chat-with .avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .chat-header .chat-with .info .name {
+            font-weight: 600;
+            font-size: 15px;
+        }
+        .chat-header .chat-with .info .status {
+            font-size: 12px;
+            color: #8696a0;
+        }
+        .chat-header .chat-with .info .status.online {
+            color: #25d366;
+        }
+        .chat-header .actions {
+            display: flex;
+            gap: 4px;
+        }
+        .chat-header .actions button {
+            background: transparent;
+            border: none;
+            color: #aebac1;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 18px;
+            transition: background 0.15s;
+        }
+        .chat-header .actions button:hover {
+            background: #2a3942;
+            color: #e8edf5;
+        }
+        .chat-header .actions button.call-btn {
+            color: #25d366;
+        }
+        .chat-header .actions button.call-btn:hover {
+            background: #1a3a2a;
+        }
+        .chat-header .actions button.call-btn.active-call {
+            color: #f87171;
+        }
+        .chat-header .actions button.call-btn.active-call:hover {
+            background: #3a1a1a;
+        }
+
+        /* ----- MESSAGES ----- */
+        .messages-container {
+            flex: 1;
+            overflow-y: auto;
+            padding: 16px 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            background: #0b141a;
+        }
+        .message {
+            max-width: 72%;
+            padding: 8px 14px;
+            border-radius: 12px;
+            font-size: 14px;
+            line-height: 1.5;
+            word-wrap: break-word;
+            animation: msgIn 0.15s ease;
+            position: relative;
+        }
+        .message.sent {
+            align-self: flex-end;
+            background: #005c4b;
+            color: #e8edf5;
+            border-bottom-right-radius: 4px;
+        }
+        .message.received {
+            align-self: flex-start;
+            background: #1f2c33;
+            color: #e8edf5;
+            border-bottom-left-radius: 4px;
+        }
+        .message .time {
+            font-size: 10px;
+            opacity: 0.6;
+            margin-top: 4px;
+            display: block;
+            text-align: right;
+        }
+        .message .msg-media {
+            max-width: 220px;
+            border-radius: 8px;
+            margin-top: 4px;
+            display: block;
+        }
+        .message .msg-audio {
+            margin-top: 4px;
+            width: 100%;
+            max-width: 200px;
+            border-radius: 40px;
+        }
+        .message .file-name {
+            font-size: 12px;
+            opacity: 0.7;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 4px;
+        }
+        .message .call-log {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+        }
+        .message .call-log i {
+            font-size: 16px;
+        }
+        .message .call-log .missed {
+            color: #f87171;
+        }
+        .message .call-log .answered {
+            color: #25d366;
+        }
+
+        @keyframes msgIn {
+            0% {
+                opacity: 0;
+                transform: translateY(6px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ----- INPUT AREA ----- */
+        .input-area {
+            padding: 8px 16px 12px;
+            border-top: 1px solid #1f2c33;
+            background: #1f2c33;
+            display: flex;
+            align-items: flex-end;
+            gap: 8px;
+        }
+        .input-area .input-wrap {
+            flex: 1;
+            display: flex;
+            align-items: flex-end;
+            background: #0b141a;
+            border-radius: 20px;
+            padding: 4px 6px 4px 16px;
+            border: 1px solid #2a3942;
+            transition: border 0.2s;
+        }
+        .input-area .input-wrap:focus-within {
+            border-color: #25d366;
+        }
+        .input-area .input-wrap textarea {
+            flex: 1;
+            background: transparent;
+            border: none;
+            outline: none;
+            color: #e8edf5;
+            font-size: 14px;
+            resize: none;
+            padding: 8px 0;
+            max-height: 100px;
+            font-family: 'Inter', sans-serif;
+            line-height: 1.4;
+        }
+        .input-area .input-wrap textarea::placeholder {
+            color: #4a5568;
+        }
+        .input-area .input-wrap .emoji-btn {
+            background: none;
+            border: none;
+            color: #4a5568;
+            font-size: 20px;
+            cursor: pointer;
+            padding: 4px 6px;
+            transition: color 0.2s;
+        }
+        .input-area .input-wrap .emoji-btn:hover {
+            color: #e8edf5;
+        }
+        .input-area .action-btn {
+            background: transparent;
+            border: none;
+            color: #aebac1;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 18px;
+            transition: background 0.15s, color 0.15s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        .input-area .action-btn:hover {
+            background: #2a3942;
+            color: #e8edf5;
+        }
+        .input-area .action-btn.send-btn {
+            background: #25d366;
+            color: #111b21;
+        }
+        .input-area .action-btn.send-btn:hover {
+            background: #128c7e;
+            color: #fff;
+            box-shadow: 0 4px 20px rgba(37, 211, 102, 0.3);
+        }
+        .input-area .action-btn.recording {
+            color: #f87171;
+            animation: pulse 1s infinite;
+        }
+        @keyframes pulse {
+            0%,
+            100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.15);
+            }
+        }
+        .input-area .file-input {
+            display: none;
+        }
+
+        /* ----- CALL OVERLAY ----- */
+        #callOverlay {
+            position: absolute;
+            inset: 0;
+            z-index: 200;
+            background: rgba(0, 0, 0, 0.94);
+            backdrop-filter: blur(24px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            border-radius: 28px;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.4s ease, visibility 0.4s ease;
+        }
+        #callOverlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .call-container {
+            width: 100%;
+            max-width: 900px;
+            height: 100%;
+            max-height: 700px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            position: relative;
+        }
+
+        .call-videos {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 100%;
+            gap: 16px;
+            position: relative;
+        }
+
+        .call-videos .remote-wrap {
+            width: 100%;
+            flex: 1;
+            min-height: 0;
+            background: #0b141a;
+            border-radius: 24px;
+            overflow: hidden;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .call-videos .remote-wrap video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .call-videos .remote-wrap .placeholder {
+            color: #4a5568;
+            font-size: 18px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+        }
+        .call-videos .remote-wrap .placeholder i {
+            font-size: 64px;
+            color: #2a3942;
+        }
+        .call-videos .remote-wrap .placeholder .name {
+            font-size: 22px;
+            color: #e8edf5;
+        }
+        .call-videos .remote-wrap .placeholder .status {
+            font-size: 14px;
+            color: #8696a0;
+        }
+
+        .call-videos .local-wrap {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            width: 160px;
+            height: 120px;
+            border-radius: 16px;
+            overflow: hidden;
+            background: #0b141a;
+            border: 2px solid #2a3942;
+            z-index: 10;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.6);
+        }
+        .call-videos .local-wrap video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .call-videos .local-wrap.voice-only {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #1f2c33;
+        }
+        .call-videos .local-wrap.voice-only i {
+            font-size: 40px;
+            color: #25d366;
+        }
+
+        .call-controls {
+            display: flex;
+            gap: 16px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .call-controls button {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            border: none;
+            background: #1f2c33;
+            color: #e8edf5;
+            font-size: 22px;
+            cursor: pointer;
+            transition: background 0.15s, transform 0.1s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .call-controls button:hover {
+            background: #2a3942;
+        }
+        .call-controls button:active {
+            transform: scale(0.92);
+        }
+        .call-controls button.end-call {
+            background: #dc2626;
+            color: #fff;
+        }
+        .call-controls button.end-call:hover {
+            background: #b91c1c;
+        }
+        .call-controls button.muted {
+            background: #4a3a3a;
+            color: #f87171;
+        }
+        .call-controls button.video-off {
+            background: #3a3a4a;
+            color: #8696a0;
+        }
+        .call-controls .caller-name {
+            color: #aebac1;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 0 16px;
+        }
+
+        /* ----- INCOMING CALL ----- */
+        #incomingCall {
+            position: absolute;
+            inset: 0;
+            z-index: 150;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(16px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            border-radius: 28px;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+        #incomingCall.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        #incomingCall .card {
+            background: #1f2c33;
+            padding: 40px 48px;
+            border-radius: 28px;
+            text-align: center;
+            border: 1px solid #2a3942;
+            max-width: 360px;
+        }
+        #incomingCall .card .avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: #2a3942;
+            margin: 0 auto 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            font-weight: 700;
+            overflow: hidden;
+        }
+        #incomingCall .card .avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        #incomingCall .card h3 {
+            font-size: 22px;
+            margin-bottom: 4px;
+        }
+        #incomingCall .card p {
+            color: #8696a0;
+            margin-bottom: 24px;
+            font-size: 14px;
+        }
+        #incomingCall .card .actions {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+        }
+        #incomingCall .card .actions button {
+            padding: 12px 32px;
+            border: none;
+            border-radius: 40px;
+            font-weight: 700;
+            font-size: 15px;
+            cursor: pointer;
+            transition: transform 0.1s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        #incomingCall .card .actions button:active {
+            transform: scale(0.94);
+        }
+        #incomingCall .card .actions .accept {
+            background: #25d366;
+            color: #111b21;
+        }
+        #incomingCall .card .actions .accept:hover {
+            background: #128c7e;
+            color: #fff;
+        }
+        #incomingCall .card .actions .reject {
+            background: #dc2626;
+            color: #fff;
+        }
+        #incomingCall .card .actions .reject:hover {
+            background: #b91c1c;
+        }
+
+        /* ----- PROFILE / STATUS MODAL ----- */
+        .modal-overlay {
+            position: absolute;
+            inset: 0;
+            z-index: 180;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(12px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 28px;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        .modal-box {
+            background: #1f2c33;
+            padding: 32px 36px;
+            border-radius: 28px;
+            border: 1px solid #2a3942;
+            max-width: 420px;
+            width: 100%;
+            margin: 16px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        .modal-box h2 {
+            font-size: 20px;
+            margin-bottom: 16px;
+            text-align: center;
+        }
+        .modal-box .avatar-upload {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+        .modal-box .avatar-upload .preview {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: #2a3942;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+            font-weight: 700;
+            overflow: hidden;
+            cursor: pointer;
+            border: 2px solid #2a3942;
+            transition: border 0.2s;
+            position: relative;
+        }
+        .modal-box .avatar-upload .preview:hover {
+            border-color: #25d366;
+        }
+        .modal-box .avatar-upload .preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .modal-box .avatar-upload .preview .overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.2s;
+            color: #fff;
+            font-size: 14px;
+        }
+        .modal-box .avatar-upload .preview:hover .overlay {
+            opacity: 1;
+        }
+        .modal-box .avatar-upload input[type="file"] {
+            display: none;
+        }
+        .modal-box label {
+            font-size: 13px;
+            font-weight: 600;
+            color: #d1d7db;
+            display: block;
+            margin-bottom: 4px;
+        }
+        .modal-box input,
+        .modal-box textarea {
+            width: 100%;
+            padding: 10px 14px;
+            border-radius: 12px;
+            border: 1px solid #2a3942;
+            background: #0b141a;
+            color: #e8edf5;
+            font-size: 14px;
+            outline: none;
+            margin-bottom: 12px;
+            font-family: 'Inter', sans-serif;
+        }
+        .modal-box input:focus,
+        .modal-box textarea:focus {
+            border-color: #25d366;
+        }
+        .modal-box textarea {
+            resize: vertical;
+            min-height: 60px;
+        }
+        .modal-box .btn-row {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+        }
+        .modal-box .btn-row button {
+            padding: 10px 24px;
+            border: none;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.15s;
+        }
+        .modal-box .btn-row .btn-primary {
+            background: #25d366;
+            color: #111b21;
+        }
+        .modal-box .btn-row .btn-primary:hover {
+            background: #128c7e;
+            color: #fff;
+        }
+        .modal-box .btn-row .btn-secondary {
+            background: #2a3942;
+            color: #aebac1;
+        }
+        .modal-box .btn-row .btn-secondary:hover {
+            background: #3a4a52;
+        }
+
+        /* ----- STATUS VIEW ----- */
+        .status-view {
+            position: absolute;
+            inset: 0;
+            z-index: 170;
+            background: #0b141a;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            border-radius: 28px;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+        .status-view.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        .status-view .content {
+            max-width: 420px;
+            width: 100%;
+            padding: 24px;
+            text-align: center;
+        }
+        .status-view .content .avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: #2a3942;
+            margin: 0 auto 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            font-weight: 700;
+            overflow: hidden;
+        }
+        .status-view .content .avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .status-view .content .name {
+            font-size: 20px;
+            font-weight: 600;
+        }
+        .status-view .content .time {
+            font-size: 13px;
+            color: #8696a0;
+            margin-bottom: 16px;
+        }
+        .status-view .content .status-text {
+            font-size: 18px;
+            padding: 20px;
+            background: #1f2c33;
+            border-radius: 16px;
+            margin-bottom: 12px;
+        }
+        .status-view .content .status-image {
+            max-width: 100%;
+            border-radius: 16px;
+            margin-bottom: 12px;
+        }
+        .status-view .content .close-btn {
+            background: #2a3942;
+            border: none;
+            color: #aebac1;
+            padding: 10px 32px;
+            border-radius: 40px;
+            font-size: 14px;
+            cursor: pointer;
+            margin-top: 8px;
+        }
+        .status-view .content .close-btn:hover {
+            background: #3a4a52;
+            color: #e8edf5;
+        }
+
+        /* ----- RESPONSIVE ----- */
+        @media (max-width: 860px) {
+            #app {
+                max-height: 100vh;
+                border-radius: 0;
+                margin: 0;
+            }
+            #loginScreen {
+                border-radius: 0;
+            }
+            #callOverlay {
+                border-radius: 0;
+            }
+            #incomingCall {
+                border-radius: 0;
+            }
+            .modal-overlay {
+                border-radius: 0;
+            }
+            .status-view {
+                border-radius: 0;
+            }
+            .sidebar {
+                width: 240px;
+                min-width: 240px;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .sidebar {
+                width: 72px;
+                min-width: 72px;
+            }
+            .sidebar-header .profile-wrap .info {
+                display: none;
+            }
+            .sidebar-header .profile-wrap .avatar {
+                width: 40px;
+                height: 40px;
+                font-size: 14px;
+            }
+            .sidebar-header .actions button {
+                display: none;
+            }
+            .sidebar-tabs button {
+                font-size: 10px;
+                padding: 6px 0;
+            }
+            .search-box {
+                display: none;
+            }
+            .user-item .info {
+                display: none;
+            }
+            .user-item .meta {
+                display: none;
+            }
+            .user-item .avatar {
+                width: 40px;
+                height: 40px;
+                font-size: 14px;
+            }
+            .user-item {
+                padding: 8px 10px;
+                justify-content: center;
+            }
+            .user-item .avatar .online-dot {
+                width: 12px;
+                height: 12px;
+            }
+            .chat-header .chat-with .info .status {
+                display: none;
+            }
+            .chat-header .actions button {
+                width: 32px;
+                height: 32px;
+                font-size: 15px;
+            }
+            .message {
+                max-width: 88%;
+                font-size: 13px;
+            }
+            .call-videos .local-wrap {
+                width: 100px;
+                height: 80px;
+                bottom: 10px;
+                right: 10px;
+            }
+            .login-box {
+                padding: 32px 20px;
+                margin: 16px;
+            }
+            .input-area {
+                padding: 6px 10px 10px;
+                gap: 4px;
+            }
+            .input-area .action-btn {
+                width: 34px;
+                height: 34px;
+                font-size: 15px;
+            }
+            .call-controls button {
+                width: 48px;
+                height: 48px;
+                font-size: 18px;
+            }
+            #incomingCall .card {
+                padding: 24px 20px;
+                margin: 16px;
+            }
+            .modal-box {
+                padding: 24px 20px;
+                margin: 12px;
+            }
+        }
+
+        .hidden {
+            display: none !important;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- ====== APP ====== -->
+    <div id="app">
+
+        <!-- ====== LOGIN ====== -->
+        <div id="loginScreen">
+            <div class="login-box">
+                <div class="logo"><i class="fab fa-whatsapp"></i></div>
+                <h1>FriendVerse</h1>
+                <p class="sub">Chat · Voice · Video · Status · Photos</p>
+                <form id="loginForm" autocomplete="off">
+                    <label for="usernameInput">Username</label>
+                    <input type="text" id="usernameInput" placeholder="Choose a username" required />
+                    <label for="passwordInput">Password</label>
+                    <input type="password" id="passwordInput" placeholder="Min 4 characters" required minlength="4" />
+                    <div class="login-error" id="loginError">Invalid credentials.</div>
+                    <button type="submit" class="btn-primary" id="loginBtn"><i class="fas fa-sign-in-alt"></i> Sign In</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- ====== MAIN APP ====== -->
+        <div id="mainApp">
+
+            <!-- SIDEBAR -->
+            <aside class="sidebar" id="sidebar">
+                <div class="sidebar-header">
+                    <div class="profile-wrap" id="profileBtn">
+                        <div class="avatar" id="myAvatar">
+                            <span id="myAvatarText">?</span>
+                            <img id="myAvatarImg" style="display:none;" />
+                        </div>
+                        <div class="info">
+                            <div class="name" id="myName">You</div>
+                            <div class="status-text" id="myStatus">Hey there!</div>
+                        </div>
+                    </div>
+                    <div class="actions">
+                        <button id="statusBtn" title="Status"><i class="fas fa-circle-plus"></i></button>
+                        <button id="logoutBtn" title="Logout"><i class="fas fa-sign-out-alt"></i></button>
+                    </div>
+                </div>
+
+                <div class="sidebar-tabs">
+                    <button class="active" data-tab="chats"><i class="fas fa-comment"></i> Chats</button>
+                    <button data-tab="calls"><i class="fas fa-phone"></i> Calls</button>
+                    <button data-tab="statuses"><i class="fas fa-circle"></i> Status</button>
+                </div>
+
+                <div class="search-box">
+                    <input type="text" id="searchInput" placeholder="Search or start new chat" />
+                </div>
+
+                <div class="user-list-container">
+                    <div class="user-list" id="userList"></div>
+                </div>
+            </aside>
+
+            <!-- CHAT AREA -->
+            <section class="chat-area">
+                <div class="chat-header" id="chatHeader">
+                    <div class="chat-with" id="chatWith">
+                        <div class="avatar" id="chatAvatar">?</div>
+                        <div class="info">
+                            <div class="name" id="chatPartnerName">Select a friend</div>
+                            <div class="status" id="chatPartnerStatus">offline</div>
+                        </div>
+                    </div>
+                    <div class="actions">
+                        <button class="call-btn" id="voiceCallBtn" title="Voice call"><i class="fas fa-phone"></i></button>
+                        <button class="call-btn" id="videoCallBtn" title="Video call"><i class="fas fa-video"></i></button>
+                    </div>
+                </div>
+
+                <div class="messages-container" id="messagesContainer">
+                    <div class="empty-state">
+                        <i class="fas fa-comment-dots"></i>
+                        <p>Select a friend to start chatting</p>
+                    </div>
+                </div>
+
+                <div class="input-area" id="inputArea">
+                    <div class="input-wrap">
+                        <textarea id="msgInput" rows="1" placeholder="Type a message..." maxlength="2000"></textarea>
+                        <button class="emoji-btn" id="emojiBtn">😊</button>
+                    </div>
+                    <button class="action-btn" id="recordBtn" title="Voice message"><i class="fas fa-microphone"></i></button>
+                    <button class="action-btn" id="photoBtn" title="Send photo"><i class="fas fa-image"></i></button>
+                    <input type="file" id="fileInput" class="file-input" accept="image/*" />
+                    <button class="action-btn send-btn" id="sendBtn"><i class="fas fa-arrow-up"></i></button>
+                </div>
+            </section>
+        </div>
+
+        <!-- ====== INCOMING CALL ====== -->
+        <div id="incomingCall">
+            <div class="card">
+                <div class="avatar" id="callerAvatar">?</div>
+                <h3 id="callerName">Unknown</h3>
+                <p id="callerType">is calling...</p>
+                <div class="actions">
+                    <button class="accept" id="acceptCallBtn"><i class="fas fa-phone"></i> Accept</button>
+                    <button class="reject" id="rejectCallBtn"><i class="fas fa-phone-slash"></i> Decline</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ====== CALL OVERLAY ====== -->
+        <div id="callOverlay">
+            <div class="call-container">
+                <div class="call-videos">
+                    <div class="remote-wrap" id="remoteWrap">
+                        <video id="remoteVideo" autoplay playsinline></video>
+                        <div class="placeholder" id="remotePlaceholder">
+                            <i class="fas fa-user-circle"></i>
+                            <div class="name" id="remoteName">Calling...</div>
+                            <div class="status" id="remoteStatus">Connecting</div>
+                        </div>
+                    </div>
+                    <div class="local-wrap" id="localWrap">
+                        <video id="localVideo" autoplay playsinline muted></video>
+                    </div>
+                </div>
+                <div class="call-controls">
+                    <button id="callMuteBtn" title="Mute"><i class="fas fa-microphone"></i></button>
+                    <button id="callVideoToggleBtn" title="Camera"><i class="fas fa-video"></i></button>
+                    <button class="end-call" id="endCallBtn"><i class="fas fa-phone-slash"></i></button>
+                    <span class="caller-name" id="callTimerDisplay">00:00</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- ====== PROFILE MODAL ====== -->
+        <div class="modal-overlay" id="profileModal">
+            <div class="modal-box">
+                <h2><i class="fas fa-user-circle"></i> Your Profile</h2>
+                <div class="avatar-upload">
+                    <div class="preview" id="profilePreview">
+                        <span id="profilePreviewText">?</span>
+                        <img id="profilePreviewImg" style="display:none;" />
+                        <div class="overlay"><i class="fas fa-camera"></i> Change</div>
+                    </div>
+                    <input type="file" id="profileFileInput" accept="image/*" />
+                </div>
+                <label>Display Name</label>
+                <input type="text" id="profileNameInput" />
+                <label>Status</label>
+                <textarea id="profileStatusInput" placeholder="What's on your mind?"></textarea>
+                <div class="btn-row">
+                    <button class="btn-secondary" id="profileCloseBtn">Cancel</button>
+                    <button class="btn-primary" id="profileSaveBtn"><i class="fas fa-save"></i> Save</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ====== STATUS VIEW ====== -->
+        <div class="status-view" id="statusView">
+            <div class="content">
+                <div class="avatar" id="statusAvatar">?</div>
+                <div class="name" id="statusName">Name</div>
+                <div class="time" id="statusTime">Just now</div>
+                <div id="statusContent"></div>
+                <button class="close-btn" id="statusCloseBtn"><i class="fas fa-times"></i> Close</button>
+            </div>
+        </div>
+
+        <!-- ====== NEW STATUS MODAL ====== -->
+        <div class="modal-overlay" id="newStatusModal">
+            <div class="modal-box">
+                <h2><i class="fas fa-circle"></i> New Status</h2>
+                <label>Type</label>
+                <select id="statusTypeSelect" style="width:100%;padding:10px 14px;border-radius:12px;border:1px solid #2a3942;background:#0b141a;color:#e8edf5;margin-bottom:12px;outline:none;">
+                    <option value="text">Text</option>
+                    <option value="photo">Photo</option>
+                </select>
+                <div id="statusTextArea">
+                    <label>Status Text</label>
+                    <textarea id="statusTextInput" placeholder="What's happening?"></textarea>
+                </div>
+                <div id="statusPhotoArea" style="display:none;">
+                    <label>Choose Photo</label>
+                    <input type="file" id="statusPhotoInput" accept="image/*" style="margin-bottom:8px;" />
+                    <div id="statusPhotoPreview" style="max-width:100%;border-radius:12px;overflow:hidden;background:#0b141a;min-height:60px;display:flex;align-items:center;justify-content:center;color:#4a5568;border:1px dashed #2a3942;padding:12px;">
+                        <span>No photo selected</span>
+                    </div>
+                </div>
+                <div class="btn-row" style="margin-top:12px;">
+                    <button class="btn-secondary" id="newStatusCloseBtn">Cancel</button>
+                    <button class="btn-primary" id="newStatusPostBtn"><i class="fas fa-share"></i> Post</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // ============================================================
+        //  FRIENDVERSE — WhatsApp-style Full Demo
+        //  Multi-tab communication via BroadcastChannel + WebRTC
+        //  Features: Auth, Chat, Voice/Video Calls, Profile, Status, Call History
+        // ============================================================
+
+        // ----- DOM refs -----
+        const $ = (s) => document.querySelector(s);
+        const $$ = (s) => document.querySelectorAll(s);
+
+        const loginScreen = $('#loginScreen');
+        const loginForm = $('#loginForm');
+        const usernameInput = $('#usernameInput');
+        const passwordInput = $('#passwordInput');
+        const loginError = $('#loginError');
+        const loginBtn = $('#loginBtn');
+
+        const mainApp = $('#mainApp');
+        const userList = $('#userList');
+        const messagesContainer = $('#messagesContainer');
+        const msgInput = $('#msgInput');
+        const sendBtn = $('#sendBtn');
+        const recordBtn = $('#recordBtn');
+        const photoBtn = $('#photoBtn');
+        const fileInput = $('#fileInput');
+        const emojiBtn = $('#emojiBtn');
+        const searchInput = $('#searchInput');
+
+        const myName = $('#myName');
+        const myStatus = $('#myStatus');
+        const myAvatar = $('#myAvatar');
+        const myAvatarText = $('#myAvatarText');
+        const myAvatarImg = $('#myAvatarImg');
+
+        const chatPartnerName = $('#chatPartnerName');
+        const chatPartnerStatus = $('#chatPartnerStatus');
+        const chatAvatar = $('#chatAvatar');
+        const chatWith = $('#chatWith');
+
+        const voiceCallBtn = $('#voiceCallBtn');
+        const videoCallBtn = $('#videoCallBtn');
+
+        const callOverlay = $('#callOverlay');
+        const localVideo = $('#localVideo');
+        const remoteVideo = $('#remoteVideo');
+        const localWrap = $('#localWrap');
+        const remoteWrap = $('#remoteWrap');
+        const remotePlaceholder = $('#remotePlaceholder');
+        const remoteName = $('#remoteName');
+        const remoteStatus = $('#remoteStatus');
+        const callMuteBtn = $('#callMuteBtn');
+        const callVideoToggleBtn = $('#callVideoToggleBtn');
+        const endCallBtn = $('#endCallBtn');
+        const callTimerDisplay = $('#callTimerDisplay');
+
+        const incomingCall = $('#incomingCall');
+        const callerName = $('#callerName');
+        const callerAvatar = $('#callerAvatar');
+        const callerType = $('#callerType');
+        const acceptCallBtn = $('#acceptCallBtn');
+        const rejectCallBtn = $('#rejectCallBtn');
+
+        const profileModal = $('#profileModal');
+        const profilePreview = $('#profilePreview');
+        const profilePreviewText = $('#profilePreviewText');
+        const profilePreviewImg = $('#profilePreviewImg');
+        const profileFileInput = $('#profileFileInput');
+        const profileNameInput = $('#profileNameInput');
+        const profileStatusInput = $('#profileStatusInput');
+        const profileCloseBtn = $('#profileCloseBtn');
+        const profileSaveBtn = $('#profileSaveBtn');
+        const profileBtn = $('#profileBtn');
+
+        const statusView = $('#statusView');
+        const statusAvatar = $('#statusAvatar');
+        const statusName = $('#statusName');
+        const statusTime = $('#statusTime');
+        const statusContent = $('#statusContent');
+        const statusCloseBtn = $('#statusCloseBtn');
+
+        const newStatusModal = $('#newStatusModal');
+        const statusTypeSelect = $('#statusTypeSelect');
+        const statusTextArea = $('#statusTextArea');
+        const statusPhotoArea = $('#statusPhotoArea');
+        const statusTextInput = $('#statusTextInput');
+        const statusPhotoInput = $('#statusPhotoInput');
+        const statusPhotoPreview = $('#statusPhotoPreview');
+        const newStatusCloseBtn = $('#newStatusCloseBtn');
+        const newStatusPostBtn = $('#newStatusPostBtn');
+        const statusBtn = $('#statusBtn');
+
+        const logoutBtn = $('#logoutBtn');
+        const tabButtons = $$('.sidebar-tabs button');
+        const searchInputEl = $('#searchInput');
+
+        // ----- State -----
+        let currentUser = '';
+        let currentPartner = '';
+        let allUsers = [];
+        let onlineUsers = new Set();
+        let messages = {}; // { partner: [msg] }
+        let callHistory = {}; // { partner: [call] }
+        let statuses = {}; // { username: { text, photo, timestamp } }
+        let userProfiles = {}; // { username: { name, photo, status } }
+        let unread = {};
+
+        // Voice recording
+        let mediaRecorder = null;
+        let audioChunks = [];
+        let isRecording = false;
+        let recorderStream = null;
+
+        // WebRTC
+        let localStream = null;
+        let peerConnection = null;
+        let isCallActive = false;
+        let isCallInitiator = false;
+        let callPartner = '';
+        let callType = 'voice'; // 'voice' | 'video'
+        let callStartTime = null;
+        let callTimerInterval = null;
+        let pendingOffer = null;
+
+        // BroadcastChannel for cross-tab communication
+        let channel = null;
+
+        // ----- Helpers -----
+        function getAvatarColor(name) {
+            let h = 0;
+            for (let i = 0; i < name.length; i++) h = (h * 31 + name.charCodeAt(i)) & 0xffff;
+            return `hsl(${h % 360}, 50%, 45%)`;
+        }
+
+        function formatTime(ts) {
+            const d = new Date(ts);
+            return d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        }
+
+        function formatDate(ts) {
+            const d = new Date(ts);
+            const now = new Date();
+            if (d.toDateString() === now.toDateString()) return 'Today';
+            const yesterday = new Date(now);
+            yesterday.setDate(yesterday.getDate() - 1);
+            if (d.toDateString() === yesterday.toDateString()) return 'Yesterday';
+            return d.toLocaleDateString();
+        }
+
+        function formatDuration(ms) {
+            const totalSec = Math.floor(ms / 1000);
+            const min = String(Math.floor(totalSec / 60)).padStart(2, '0');
+            const sec = String(totalSec % 60).padStart(2, '0');
+            return `${min}:${sec}`;
+        }
+
+        function getInitials(name) {
+            return name.charAt(0).toUpperCase();
+        }
+
+        function getDisplayName(user) {
+            return userProfiles[user]?.name || user;
+        }
+
+        function getUserPhoto(user) {
+            return userProfiles[user]?.photo || null;
+        }
+
+        function getUserStatus(user) {
+            return userProfiles[user]?.status || 'Hey there!';
+        }
+
+        function getAvatarHTML(user, size = 40) {
+            const photo = getUserPhoto(user);
+            const color = getAvatarColor(user);
+            if (photo) {
+                return `<img src="${photo}" style="width:${size}px;height:${size}px;object-fit:cover;" />`;
+            }
+            return `<span style="background:${color};width:${size}px;height:${size}px;display:flex;align-items:center;justify-content:center;border-radius:50%;font-weight:700;font-size:${size*0.4}px;">${getInitials(user)}</span>`;
+        }
+
+        function escapeHtml(text) {
+            const d = document.createElement('div');
+            d.textContent = text;
+            return d.innerHTML;
+        }
+
+        function scrollToBottom() {
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+
+        function getOnlineStatus(user) {
+            return onlineUsers.has(user) ? 'online' : 'offline';
+        }
+
+        function isUserOnline(user) {
+            return onlineUsers.has(user);
+        }
+
+        // ----- Data persistence -----
+        function saveData() {
+            try {
+                const data = {
+                    messages,
+                    callHistory,
+                    statuses,
+                    userProfiles,
+                    unread
+                };
+                localStorage.setItem('friendverse_' + currentUser, JSON.stringify(data));
+            } catch (e) {}
+        }
+
+        function loadData() {
+            try {
+                const raw = localStorage.getItem('friendverse_' + currentUser);
+                if (raw) {
+                    const data = JSON.parse(raw);
+                    messages = data.messages || {};
+                    callHistory = data.callHistory || {};
+                    statuses = data.statuses || {};
+                    userProfiles = data.userProfiles || {};
+                    unread = data.unread || {};
+                }
+            } catch (e) {}
+        }
+
+        function loadAllProfiles() {
+            // Load profiles from all users
+            try {
+                const keys = Object.keys(localStorage).filter(k => k.startsWith('friendverse_'));
+                for (const key of keys) {
+                    const user = key.replace('friendverse_', '');
+                    const raw = localStorage.getItem(key);
+                    if (raw) {
+                        const data = JSON.parse(raw);
+                        if (data.userProfiles && data.userProfiles[user]) {
+                            userProfiles[user] = data.userProfiles[user];
+                        }
+                        // Also load statuses
+                        if (data.statuses) {
+                            for (const [u, s] of Object.entries(data.statuses)) {
+                                if (!statuses[u] || statuses[u].timestamp < s.timestamp) {
+                                    statuses[u] = s;
+                                }
+                            }
+                        }
+                    }
+                }
+            } catch (e) {}
+        }
+
+        // ----- BroadcastChannel -----
+        function initChannel() {
+            try {
+                channel = new BroadcastChannel('friendverse_channel');
+                channel.onmessage = (e) => {
+                    const data = e.data;
+                    if (data.from === currentUser) return;
+                    handleChannelMessage(data);
+                };
+            } catch (e) {
+                console.warn('BroadcastChannel not supported, using fallback');
+            }
+        }
+
+        function broadcast(data) {
+            if (channel) {
+                try {
+                    channel.postMessage({ ...data, from: currentUser });
+                } catch (e) {}
+            }
+        }
+
+        function handleChannelMessage(data) {
+            const { type, from } = data;
+            if (from === currentUser) return;
+
+            switch (type) {
+                case 'online':
+                    onlineUsers.add(from);
+                    renderUsers();
+                    updateChatStatus();
+                    break;
+                case 'offline':
+                    onlineUsers.delete(from);
+                    renderUsers();
+                    updateChatStatus();
+                    break;
+                case 'message':
+                    handleIncomingMessage(data.msg);
+                    break;
+                case 'profile_update':
+                    userProfiles[from] = data.profile;
+                    renderUsers();
+                    updateChatHeader();
+                    break;
+                case 'status_update':
+                    statuses[from] = data.status;
+                    renderUsers();
+                    break;
+                case 'call_log':
+                    handleIncomingCallLog(data.call);
+                    break;
+                case 'webrtc_offer':
+                    handleWebRTCOffer(data);
+                    break;
+                case 'webrtc_answer':
+                    handleWebRTCAnswer(data);
+                    break;
+                case 'webrtc_ice':
+                    handleWebRTCIce(data);
+                    break;
+                case 'webrtc_end':
+                    handleWebRTCEnd(data);
+                    break;
+                case 'webrtc_reject':
+                    handleWebRTCReject(data);
+                    break;
+                case 'webrtc_busy':
+                    handleWebRTCBusy(data);
+                    break;
+                case 'ping':
+                    // Respond to ping
+                    broadcast({ type: 'pong', from: currentUser });
+                    break;
+                case 'pong':
+                    // Someone responded to ping
+                    break;
+            }
+        }
+
+        // ----- Online status heartbeat -----
+        function sendOnlineStatus() {
+            broadcast({ type: 'online', from: currentUser });
+        }
+
+        function sendOfflineStatus() {
+            broadcast({ type: 'offline', from: currentUser });
+        }
+
+        // ----- Render user list -----
+        function renderUsers() {
+            const searchTerm = searchInput.value.toLowerCase().trim();
+            const activeTab = document.querySelector('.sidebar-tabs button.active')?.dataset.tab || 'chats';
+
+            let users = [];
+            if (activeTab === 'chats') {
+                // Show all users who have had messages or are online
+                const all = new Set([...Object.keys(messages), ...onlineUsers]);
+                users = [...all].filter(u => u !== currentUser);
+            } else if (activeTab === 'calls') {
+                // Show users with call history
+                users = Object.keys(callHistory).filter(u => u !== currentUser);
+            } else if (activeTab === 'statuses') {
+                // Show users with status updates
+                users = Object.keys(statuses).filter(u => u !== currentUser);
+            }
+
+            // Sort: online first, then by last message time
+            users.sort((a, b) => {
+                const aOnline = onlineUsers.has(a);
+                const bOnline = onlineUsers.has(b);
+                if (aOnline && !bOnline) return -1;
+                if (!aOnline && bOnline) return 1;
+                const aLast = messages[a]?.[messages[a].length - 1]?.timestamp || 0;
+                const bLast = messages[b]?.[messages[b].length - 1]?.timestamp || 0;
+                return bLast - aLast;
+            });
+
+            // Filter by search
+            if (searchTerm) {
+                users = users.filter(u => getDisplayName(u).toLowerCase().includes(searchTerm) || u.toLowerCase().includes(
+                searchTerm));
+            }
+
+            let html = '';
+            for (const u of users) {
+                const isOnline = onlineUsers.has(u);
+                const isActive = u === currentPartner;
+                const unreadCount = unread[u] || 0;
+                const lastMsg = messages[u]?.[messages[u].length - 1];
+                const lastMsgText = lastMsg ? (lastMsg.type === 'text' ? lastMsg.content : (lastMsg.type === 'voice' ?
+                    '🎤 Voice' : (lastMsg.type === 'photo' ? '📷 Photo' : (lastMsg.type === 'call' ? '📞 Call' :
+                    '...')))) : '';
+                const lastMsgTime = lastMsg ? formatTime(lastMsg.timestamp) : '';
+                const displayName = getDisplayName(u);
+                const photo = getUserPhoto(u);
+                const hasStatus = statuses[u] && statuses[u].timestamp > Date.now() - 24 * 60 * 60 * 1000;
+
+                html += `
+              <div class="user-item ${isActive ? 'active' : ''}" data-user="${u}">
+                <div class="avatar">
+                  ${photo ? `<img src="${photo}" />` : getInitials(u)}
+                  <span class="online-dot ${isOnline ? 'online' : ''}"></span>
+                </div>
+                <div class="info">
+                  <div class="name">${escapeHtml(displayName)} ${hasStatus ? '<span style="color:#25d366;font-size:12px;">●</span>' : ''}</div>
+                  <div class="last-msg">${lastMsgText ? (lastMsg.from === currentUser ? 'You: ' : '') + escapeHtml(lastMsgText) : 'Start chatting...'}</div>
+                </div>
+                <div class="meta">
+                  ${lastMsgTime ? `<div class="time">${lastMsgTime}</div>` : ''}
+                  ${unreadCount > 0 ? `<div class="unread">${unreadCount}</div>` : ''}
+                </div>
+              </div>
+            `;
+            }
+
+            if (users.length === 0) {
+                html = `<div style="padding:40px 20px;text-align:center;color:#8696a0;font-size:14px;">
+              ${activeTab === 'chats' ? 'No chats yet. Start a new conversation!' : 
+                activeTab === 'calls' ? 'No call history.' : 
+                'No status updates from friends.'}
+            </div>`;
+            }
+
+            userList.innerHTML = html;
+
+            // Click events
+            userList.querySelectorAll('.user-item').forEach(el => {
+                el.addEventListener('click', () => {
+                    const user = el.dataset.user;
+                    if (user && user !== currentPartner) {
+                        switchChat(user);
+                    }
+                });
+            });
+        }
+
+        // ----- Switch chat -----
+        function switchChat(partner) {
+            if (!partner || partner === currentPartner) return;
+            currentPartner = partner;
+            unread[partner] = 0;
+            saveData();
+            renderUsers();
+            updateChatHeader();
+            renderMessages();
+            // Enable input
+            document.getElementById('inputArea').style.display = 'flex';
+        }
+
+        function updateChatHeader() {
+            if (!currentPartner) {
+                chatPartnerName.textContent = 'Select a friend';
+                chatPartnerStatus.textContent = 'offline';
+                chatPartnerStatus.className = 'status';
+                chatAvatar.innerHTML = '?';
+                return;
+            }
+            const displayName = getDisplayName(currentPartner);
+            chatPartnerName.textContent = displayName;
+            const isOnline = onlineUsers.has(currentPartner);
+            chatPartnerStatus.textContent = isOnline ? 'online' : 'offline';
+            chatPartnerStatus.className = 'status' + (isOnline ? ' online' : '');
+            const photo = getUserPhoto(currentPartner);
+            chatAvatar.innerHTML = photo ? `<img src="${photo}" />` : getInitials(currentPartner);
+            chatAvatar.style.background = photo ? 'transparent' : getAvatarColor(currentPartner);
+            // Update call buttons
+            voiceCallBtn.style.opacity = isOnline ? '1' : '0.4';
+            voiceCallBtn.style.pointerEvents = isOnline ? 'auto' : 'none';
+            videoCallBtn.style.opacity = isOnline ? '1' : '0.4';
+            videoCallBtn.style.pointerEvents = isOnline ? 'auto' : 'none';
+        }
+
+        function updateChatStatus() {
+            if (!currentPartner) return;
+            const isOnline = onlineUsers.has(currentPartner);
+            chatPartnerStatus.textContent = isOnline ? 'online' : 'offline';
+            chatPartnerStatus.className = 'status' + (isOnline ? ' online' : '');
+            voiceCallBtn.style.opacity = isOnline ? '1' : '0.4';
+            voiceCallBtn.style.pointerEvents = isOnline ? 'auto' : 'none';
+            videoCallBtn.style.opacity = isOnline ? '1' : '0.4';
+            videoCallBtn.style.pointerEvents = isOnline ? 'auto' : 'none';
+        }
+
+        function renderMessages() {
+            if (!currentPartner) {
+                messagesContainer.innerHTML = `
+              <div class="empty-state">
+                <i class="fas fa-comment-dots"></i>
+                <p>Select a friend to start chatting</p>
+              </div>
+            `;
+                return;
+            }
+
+            const msgs = messages[currentPartner] || [];
+            if (msgs.length === 0) {
+                messagesContainer.innerHTML = `
+              <div class="empty-state">
+                <i class="fas fa-comment-dots"></i>
+                <p>Say hello to ${getDisplayName(currentPartner)} 👋</p>
+              </div>
+            `;
+                return;
+            }
+
+            let html = '';
+            let lastDate = '';
+            for (const m of msgs) {
+                const date = formatDate(m.timestamp);
+                if (date !== lastDate) {
+                    html += `<div style="text-align:center;color:#8696a0;font-size:12px;padding:8px 0;font-weight:500;">${date}</div>`;
+                    lastDate = date;
+                }
+                html += renderMessageHTML(m);
+            }
+            messagesContainer.innerHTML = html;
+            scrollToBottom();
+        }
+
+        function renderMessageHTML(m) {
+            const isSent = m.from === currentUser;
+            const time = formatTime(m.timestamp);
+
+            let contentHtml = '';
+            if (m.type === 'text') {
+                contentHtml = `<div>${escapeHtml(m.content)}</div>`;
+            } else if (m.type === 'voice') {
+                contentHtml = `
+              <audio controls class="msg-audio" src="${m.content}"></audio>
+              <div class="file-name"><i class="fas fa-microphone"></i> Voice message</div>
+            `;
+            } else if (m.type === 'photo') {
+                contentHtml = `
+              <img src="${m.content}" class="msg-media" alt="photo" loading="lazy" />
+              <div class="file-name"><i class="fas fa-image"></i> Photo</div>
+            `;
+            } else if (m.type === 'call') {
+                const isMissed = m.missed;
+                const icon = isMissed ? 'fa-phone-slash' : 'fa-phone';
+                const cls = isMissed ? 'missed' : 'answered';
+                const label = isMissed ? 'Missed call' : (m.duration ? `Call (${formatDuration(m.duration)})` : 'Call');
+                contentHtml = `
+              <div class="call-log">
+                <i class="fas ${icon} ${cls}"></i>
+                <span>${label}</span>
+                ${m.duration ? `<span style="color:#8696a0;font-size:12px;">${formatDuration(m.duration)}</span>` : ''}
+              </div>
+            `;
+            }
+
+            return `
+            <div class="message ${isSent ? 'sent' : 'received'}">
+              ${contentHtml}
+              <span class="time">${time}</span>
+            </div>
+          `;
+        }
+
+        // ----- Add message -----
+        function addMessage(msg) {
+            const target = msg.from === currentUser ? msg.to : msg.from;
+            if (!messages[target]) messages[target] = [];
+            const exists = messages[target].some(m => m.id === msg.id);
+            if (!exists) {
+                messages[target].push(msg);
+                saveData();
+            }
+
+            if (target === currentPartner) {
+                renderMessages();
+            } else {
+                if (msg.from !== currentUser) {
+                    unread[msg.from] = (unread[msg.from] || 0) + 1;
+                    saveData();
+                }
+                renderUsers();
+            }
+            renderUsers();
+        }
+
+        // ----- Handle incoming message from channel -----
+        function handleIncomingMessage(msg) {
+            addMessage(msg);
+            // If this is a reply, maybe auto-reply?
+        }
+
+        // ----- Send message -----
+        function sendTextMessage(text) {
+            if (!currentPartner || !text.trim()) return;
+            const msg = {
+                id: Date.now() + '-' + Math.random().toString(36).slice(2, 6),
+                from: currentUser,
+                to: currentPartner,
+                type: 'text',
+                content: text.trim(),
+                timestamp: Date.now()
+            };
+            addMessage(msg);
+            broadcast({ type: 'message', from: currentUser, msg });
+            msgInput.value = '';
+            msgInput.style.height = 'auto';
+        }
+
+        function sendMedia(type, dataUrl) {
+            if (!currentPartner) return;
+            const msg = {
+                id: Date.now() + '-' + Math.random().toString(36).slice(2, 6),
+                from: currentUser,
+                to: currentPartner,
+                type: type,
+                content: dataUrl,
+                timestamp: Date.now()
+            };
+            addMessage(msg);
+            broadcast({ type: 'message', from: currentUser, msg });
+        }
+
+        // ----- Call history -----
+        function addCallLog(partner, duration, missed = false) {
+            if (!callHistory[partner]) callHistory[partner] = [];
+            const entry = {
+                id: Date.now() + '-' + Math.random().toString(36).slice(2, 6),
+                from: currentUser,
+                to: partner,
+                duration: duration || 0,
+                missed: missed,
+                timestamp: Date.now(),
+                type: callType || 'voice'
+            };
+            callHistory[partner].push(entry);
+            saveData();
+
+            // Also add as message
+            const msg = {
+                id: entry.id,
+                from: currentUser,
+                to: partner,
+                type: 'call',
+                content: missed ? 'Missed call' : `Call ${duration ? formatDuration(duration) : ''}`,
+                missed: missed,
+                duration: duration || 0,
+                timestamp: Date.now()
+            };
+            addMessage(msg);
+            broadcast({ type: 'call_log', from: currentUser, call: entry });
+            renderUsers();
+        }
+
+        function handleIncomingCallLog(call) {
+            const target = call.from === currentUser ? call.to : call.from;
+            if (!callHistory[target]) callHistory[target] = [];
+            const exists = callHistory[target].some(c => c.id === call.id);
+            if (!exists) {
+                callHistory[target].push(call);
+                saveData();
+                // Add as message
+                const msg = {
+                    id: call.id,
+                    from: call.from,
+                    to: call.to,
+                    type: 'call',
+                    content: call.missed ? 'Missed call' : `Call ${call.duration ? formatDuration(call.duration) : ''}`,
+                    missed: call.missed,
+                    duration: call.duration || 0,
+                    timestamp: call.timestamp
+                };
+                addMessage(msg);
+            }
+            renderUsers();
+        }
+
+        // ============================================================
+        //  VOICE RECORDING
+        // ============================================================
+        async function startRecording() {
+            if (isRecording) return;
+            try {
+                recorderStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                mediaRecorder = new MediaRecorder(recorderStream);
+                audioChunks = [];
+
+                mediaRecorder.ondataavailable = (e) => {
+                    if (e.data.size > 0) audioChunks.push(e.data);
+                };
+
+                mediaRecorder.onstop = () => {
+                    const blob = new Blob(audioChunks, { type: 'audio/webm' });
+                    const reader = new FileReader();
+                    reader.onload = () => {
+                        const dataUrl = reader.result;
+                        sendMedia('voice', dataUrl);
+                    };
+                    reader.readAsDataURL(blob);
+                    if (recorderStream) {
+                        recorderStream.getTracks().forEach(t => t.stop());
+                        recorderStream = null;
+                    }
+                    isRecording = false;
+                    recordBtn.classList.remove('recording');
+                    recordBtn.innerHTML = '<i class="fas fa-microphone"></i>';
+                };
+
+                mediaRecorder.start();
+                isRecording = true;
+                recordBtn.classList.add('recording');
+                recordBtn.innerHTML = '<i class="fas fa-stop"></i>';
+            } catch (err) {
+                console.error('Record error:', err);
+                alert('Could not access microphone.');
+            }
+        }
+
+        function stopRecording() {
+            if (mediaRecorder && isRecording) {
+                mediaRecorder.stop();
+            }
+        }
+
+        recordBtn.addEventListener('click', () => {
+            if (isRecording) {
+                stopRecording();
+            } else {
+                startRecording();
+            }
+        });
+
+        // ============================================================
+        //  PHOTO
+        // ============================================================
+        photoBtn.addEventListener('click', () => fileInput.click());
+
+        fileInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+            if (!file.type.startsWith('image/')) {
+                alert('Please select an image.');
+                fileInput.value = '';
+                return;
+            }
+            const reader = new FileReader();
+            reader.onload = (ev) => {
+                const dataUrl = ev.target.result;
+                sendMedia('photo', dataUrl);
+                fileInput.value = '';
+            };
+            reader.readAsDataURL(file);
+        });
+
+        // ============================================================
+        //  EMOJI
+        // ============================================================
+        emojiBtn.addEventListener('click', () => {
+            const emojis = ['😊', '😂', '❤️', '🔥', '👍', '👋', '😍', '🤩', '😎', '💯', '🎉', '✨', '🌟', '💪', '🙌', '🤗', '😘', '🥰',
+                '😁', '🤣'
+            ];
+            const picker = document.createElement('div');
+            picker.style.cssText = `
+            position:fixed; bottom:80px; left:20px; background:#1f2c33; 
+            border-radius:16px; padding:12px; display:flex; flex-wrap:wrap; gap:4px;
+            max-width:260px; border:1px solid #2a3942; z-index:250;
+            box-shadow:0 12px 40px rgba(0,0,0,0.6);
+          `;
+            emojis.forEach(e => {
+                const btn = document.createElement('button');
+                btn.textContent = e;
+                btn.style.cssText =
+                    'background:none;border:none;font-size:26px;cursor:pointer;padding:4px 8px;border-radius:8px;';
+                btn.onmouseover = () => btn.style.background = '#2a3942';
+                btn.onmouseout = () => btn.style.background = 'transparent';
+                btn.onclick = () => {
+                    msgInput.value += e;
+                    msgInput.focus();
+                    picker.remove();
+                };
+                picker.appendChild(btn);
+            });
+            document.body.appendChild(picker);
+            setTimeout(() => {
+                document.addEventListener('click', function dismiss(e) {
+                    if (!picker.contains(e.target)) {
+                        picker.remove();
+                        document.removeEventListener('click', dismiss);
+                    }
+                });
+            }, 10);
+        });
+
+        // ============================================================
+        //  SEND
+        // ============================================================
+        sendBtn.addEventListener('click', () => {
+            const text = msgInput.value;
+            if (text.trim()) sendTextMessage(text);
+        });
+
+        msgInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                sendBtn.click();
+            }
+        });
+
+        msgInput.addEventListener('input', () => {
+            msgInput.style.height = 'auto';
+            msgInput.style.height = Math.min(msgInput.scrollHeight, 100) + 'px';
+        });
+
+        // ============================================================
+        //  WEBRTC — Voice & Video Calls
+        // ============================================================
+        const rtcConfig = {
+            iceServers: [
+                { urls: 'stun:stun.l.google.com:19302' },
+                { urls: 'stun:stun1.l.google.com:19302' },
+            ]
+        };
+
+        async function getLocalStream(video = true) {
+            try {
+                const constraints = {
+                    audio: true,
+                    video: video ? { facingMode: 'user' } : false
+                };
+                localStream = await navigator.mediaDevices.getUserMedia(constraints);
+                localVideo.srcObject = localStream;
+                if (!video) {
+                    localWrap.classList.add('voice-only');
+                    localWrap.innerHTML = `<i class="fas fa-phone" style="font-size:40px;color:#25d366;"></i>`;
+                    localVideo.style.display = 'none';
+                } else {
+                    localWrap.classList.remove('voice-only');
+                    localWrap.innerHTML = '';
+                    localWrap.appendChild(localVideo);
+                    localVideo.style.display = 'block';
+                }
+                return true;
+            } catch (err) {
+                console.error('Media error:', err);
+                alert('Could not access camera/mic. Please allow permissions.');
+                return false;
+            }
+        }
+
+        function stopLocalStream() {
+            if (localStream) {
+                localStream.getTracks().forEach(t => t.stop());
+                localStream = null;
+                localVideo.srcObject = null;
+                localVideo.style.display = 'block';
+                localWrap.classList.remove('voice-only');
+                localWrap.innerHTML = '';
+                localWrap.appendChild(localVideo);
+            }
+        }
+
+        function createPeerConnection() {
+            const pc = new RTCPeerConnection(rtcConfig);
+
+            pc.onicecandidate = (e) => {
+                if (e.candidate) {
+                    broadcast({
+                        type: 'webrtc_ice',
+                        from: currentUser,
+                        to: callPartner,
+                        candidate: e.candidate
+                    });
+                }
+            };
+
+            pc.ontrack = (e) => {
+                if (e.streams && e.streams[0]) {
+                    remoteVideo.srcObject = e.streams[0];
+                    remoteVideo.style.display = 'block';
+                    const ph = remotePlaceholder;
+                    ph.querySelector('.status').textContent = 'Connected';
+                    ph.querySelector('.name').textContent = getDisplayName(callPartner);
+                }
+            };
+
+            pc.onconnectionstatechange = () => {
+                if (pc.connectionState === 'connected') {
+                    remoteStatus.textContent = 'Connected';
+                    startCallTimer();
+                } else if (pc.connectionState === 'disconnected' || pc.connectionState === 'failed') {
+                    endCall();
+                }
+            };
+
+            return pc;
+        }
+
+        function startCallTimer() {
+            callStartTime = Date.now();
+            if (callTimerInterval) clearInterval(callTimerInterval);
+            callTimerInterval = setInterval(() => {
+                const elapsed = Date.now() - callStartTime;
+                callTimerDisplay.textContent = formatDuration(elapsed);
+            }, 1000);
+        }
+
+        function stopCallTimer() {
+            if (callTimerInterval) {
+                clearInterval(callTimerInterval);
+                callTimerInterval = null;
+            }
+            callTimerDisplay.textContent = '00:00';
+        }
+
+        // ----- Initiate call -----
+        async function initiateCall(partner, video = true) {
+            if (isCallActive) {
+                alert('You are already on a call.');
+                return;
+            }
+            if (!onlineUsers.has(partner)) {
+                alert('User is offline.');
+                return;
+            }
+
+            callType = video ? 'video' : 'voice';
+            callPartner = partner;
+            isCallInitiator = true;
+
+            const ok = await getLocalStream(video);
+            if (!ok) { isCallInitiator = false; return; }
+
+            peerConnection = createPeerConnection();
+
+            localStream.getTracks().forEach(track => {
+                peerConnection.addTrack(track, localStream);
+            });
+
+            try {
+                const offer = await peerConnection.createOffer();
+                await peerConnection.setLocalDescription(offer);
+
+                broadcast({
+                    type: 'webrtc_offer',
+                    from: currentUser,
+                    to: partner,
+                    offer: offer,
+                    video: video
+                });
+
+                // Show call overlay
+                callOverlay.classList.add('active');
+                remoteName.textContent = getDisplayName(partner);
+                remoteStatus.textContent = 'Calling...';
+                remoteVideo.style.display = 'none';
+                remotePlaceholder.querySelector('.status').textContent = 'Calling...';
+                remotePlaceholder.querySelector('.name').textContent = getDisplayName(partner);
+                isCallActive = true;
+
+                // Set call buttons
+                voiceCallBtn.classList.add('active-call');
+                videoCallBtn.classList.add('active-call');
+                voiceCallBtn.innerHTML = '<i class="fas fa-phone-slash"></i>';
+                videoCallBtn.innerHTML = '<i class="fas fa-phone-slash"></i>';
+
+                // Update controls
+                updateCallControls();
+
+                // Timeout if no answer
+                setTimeout(() => {
+                    if (isCallActive && isCallInitiator && peerConnection?.connectionState === 'new') {
+                        endCall();
+                        alert('No answer from ' + getDisplayName(partner));
+                    }
+                }, 30000);
+
+            } catch (err) {
+                console.error('Offer error:', err);
+                endCall();
+            }
+        }
+
+        // ----- Handle incoming offer -----
+        async function handleWebRTCOffer(data) {
+            if (data.from === currentUser) return;
+            if (isCallActive) {
+                broadcast({ type: 'webrtc_busy', from: currentUser, to: data.from });
+                return;
+            }
+
+            pendingOffer = data;
+            callPartner = data.from;
+            callType = data.video ? 'video' : 'voice';
+
+            // Show incoming call UI
+            callerName.textContent = getDisplayName(data.from);
+            callerType.textContent = data.video ? 'Video call...' : 'Voice call...';
+            const photo = getUserPhoto(data.from);
+            callerAvatar.innerHTML = photo ? `<img src="${photo}" />` : getInitials(data.from);
+            callerAvatar.style.background = photo ? 'transparent' : getAvatarColor(data.from);
+            incomingCall.classList.add('active');
+
+            // Accept
+            acceptCallBtn.onclick = async () => {
+                incomingCall.classList.remove('active');
+                const ok = await getLocalStream(data.video);
+                if (!ok) {
+                    broadcast({ type: 'webrtc_reject', from: currentUser, to: data.from });
+                    return;
+                }
+
+                isCallInitiator = false;
+                callPartner = data.from;
+                isCallActive = true;
+
+                peerConnection = createPeerConnection();
+
+                localStream.getTracks().forEach(track => {
+                    peerConnection.addTrack(track, localStream);
+                });
+
+                try {
+                    await peerConnection.setRemoteDescription(new RTCSessionDescription(data.offer));
+                    const answer = await peerConnection.createAnswer();
+                    await peerConnection.setLocalDescription(answer);
+
+                    broadcast({
+                        type: 'webrtc_answer',
+                        from: currentUser,
+                        to: data.from,
+                        answer: answer
+                    });
+
+                    callOverlay.classList.add('active');
+                    remoteName.textContent = getDisplayName(data.from);
+                    remoteStatus.textContent = 'Connecting...';
+                    remoteVideo.style.display = 'none';
+                    remotePlaceholder.querySelector('.status').textContent = 'Connecting...';
+                    remotePlaceholder.querySelector('.name').textContent = getDisplayName(data.from);
+
+                    voiceCallBtn.classList.add('active-call');
+                    videoCallBtn.classList.add('active-call');
+                    voiceCallBtn.innerHTML = '<i class="fas fa-phone-slash"></i>';
+                    videoCallBtn.innerHTML = '<i class="fas fa-phone-slash"></i>';
+
+                    updateCallControls();
+                } catch (err) {
+                    console.error('Answer error:', err);
+                    endCall();
+                }
+            };
+
+            rejectCallBtn.onclick = () => {
+                incomingCall.classList.remove('active');
+                broadcast({ type: 'webrtc_reject', from: currentUser, to: data.from });
+                callPartner = '';
+                pendingOffer = null;
+            };
+
+            // Auto-reject after 25s
+            setTimeout(() => {
+                if (incomingCall.classList.contains('active')) {
+                    incomingCall.classList.remove('active');
+                    broadcast({ type: 'webrtc_reject', from: currentUser, to: data.from });
+                    callPartner = '';
+                    pendingOffer = null;
+                }
+            }, 25000);
+        }
+
+        // ----- Handle answer -----
+        async function handleWebRTCAnswer(data) {
+            if (data.from !== callPartner || !isCallInitiator) return;
+            try {
+                await peerConnection.setRemoteDescription(new RTCSessionDescription(data.answer));
+                remoteStatus.textContent = 'Connected';
+                startCallTimer();
+            } catch (err) {
+                console.error('Answer set error:', err);
+            }
+        }
+
+        // ----- Handle ICE -----
+        function handleWebRTCIce(data) {
+            if (data.from !== callPartner) return;
+            if (peerConnection) {
+                try {
+                    peerConnection.addIceCandidate(new RTCIceCandidate(data.candidate));
+                } catch (e) {}
+            }
+        }
+
+        // ----- Handle end -----
+        function handleWebRTCEnd(data) {
+            if (data.from === callPartner) {
+                const duration = callStartTime ? Date.now() - callStartTime : 0;
+                addCallLog(callPartner, duration, false);
+                endCall();
+            }
+        }
+
+        // ----- Handle reject -----
+        function handleWebRTCReject(data) {
+            if (data.from === callPartner && isCallInitiator) {
+                alert(getDisplayName(callPartner) + ' declined the call.');
+                endCall();
+            }
+        }
+
+        // ----- Handle busy -----
+        function handleWebRTCBusy(data) {
+            if (data.from === callPartner && isCallInitiator) {
+                alert(getDisplayName(callPartner) + ' is on another call.');
+                endCall();
+            }
+        }
+
+        // ----- End call -----
+        function endCall() {
+            const duration = callStartTime ? Date.now() - callStartTime : 0;
+            const hadCall = isCallActive && callPartner;
+
+            if (hadCall && !isCallInitiator) {
+                // If we received a call and ended it, log it
+                addCallLog(callPartner, duration, false);
+            } else if (hadCall && isCallInitiator && peerConnection?.connectionState === 'connected') {
+                addCallLog(callPartner, duration, false);
+            }
+
+            if (peerConnection) {
+                peerConnection.close();
+                peerConnection = null;
+            }
+            stopLocalStream();
+            remoteVideo.srcObject = null;
+            remoteVideo.style.display = 'none';
+            remotePlaceholder.querySelector('.status').textContent = 'Call ended';
+            remotePlaceholder.querySelector('.name').textContent = '';
+
+            callOverlay.classList.remove('active');
+            incomingCall.classList.remove('active');
+
+            isCallActive = false;
+            isCallInitiator = false;
+            callPartner = '';
+            callStartTime = null;
+            stopCallTimer();
+
+            voiceCallBtn.classList.remove('active-call');
+            videoCallBtn.classList.remove('active-call');
+            voiceCallBtn.innerHTML = '<i class="fas fa-phone"></i>';
+            videoCallBtn.innerHTML = '<i class="fas fa-video"></i>';
+
+            callMuteBtn.classList.remove('muted');
+            callMuteBtn.innerHTML = '<i class="fas fa-microphone"></i>';
+            callVideoToggleBtn.classList.remove('video-off');
+            callVideoToggleBtn.innerHTML = '<i class="fas fa-video"></i>';
+
+            // Notify others
+            if (hadCall && callPartner) {
+                broadcast({ type: 'webrtc_end', from: currentUser, to: callPartner });
+            }
+
+            pendingOffer = null;
+        }
+
+        // ----- Update call controls -----
+        function updateCallControls() {
+            callMuteBtn.onclick = () => {
+                if (!localStream) return;
+                const track = localStream.getAudioTracks()[0];
+                if (track) {
+                    track.enabled = !track.enabled;
+                    callMuteBtn.classList.toggle('muted');
+                    callMuteBtn.innerHTML = track.enabled ? '<i class="fas fa-microphone"></i>' :
+                        '<i class="fas fa-microphone-slash"></i>';
+                }
+            };
+
+            callVideoToggleBtn.onclick = () => {
+                if (!localStream) return;
+                const track = localStream.getVideoTracks()[0];
+                if (track) {
+                    track.enabled = !track.enabled;
+                    callVideoToggleBtn.classList.toggle('video-off');
+                    callVideoToggleBtn.innerHTML = track.enabled ? '<i class="fas fa-video"></i>' :
+                        '<i class="fas fa-video-slash"></i>';
+                }
+            };
+
+            endCallBtn.onclick = endCall;
+        }
+
+        // ----- Call buttons -----
+        voiceCallBtn.addEventListener('click', () => {
+            if (isCallActive) {
+                endCall();
+            } else if (currentPartner) {
+                initiateCall(currentPartner, false);
+            }
+        });
+
+        videoCallBtn.addEventListener('click', () => {
+            if (isCallActive) {
+                endCall();
+            } else if (currentPartner) {
+                initiateCall(currentPartner, true);
+            }
+        });
+
+        // ============================================================
+        //  PROFILE
+        // ============================================================
+        function loadProfile() {
+            const profile = userProfiles[currentUser] || {};
+            profileNameInput.value = profile.name || currentUser;
+            profileStatusInput.value = profile.status || 'Hey there!';
+            if (profile.photo) {
+                profilePreviewImg.src = profile.photo;
+                profilePreviewImg.style.display = 'block';
+                profilePreviewText.style.display = 'none';
+            } else {
+                profilePreviewImg.style.display = 'none';
+                profilePreviewText.style.display = 'block';
+                profilePreviewText.textContent = getInitials(currentUser);
+            }
+            // Update sidebar
+            updateSidebarProfile();
+        }
+
+        function updateSidebarProfile() {
+            const profile = userProfiles[currentUser] || {};
+            myName.textContent = profile.name || currentUser;
+            myStatus.textContent = profile.status || 'Hey there!';
+            if (profile.photo) {
+                myAvatarImg.src = profile.photo;
+                myAvatarImg.style.display = 'block';
+                myAvatarText.style.display = 'none';
+            } else {
+                myAvatarImg.style.display = 'none';
+                myAvatarText.style.display = 'block';
+                myAvatarText.textContent = getInitials(currentUser);
+            }
+        }
+
+        function saveProfile() {
+            const name = profileNameInput.value.trim() || currentUser;
+            const status = profileStatusInput.value.trim() || 'Hey there!';
+            const photo = profilePreviewImg.src || null;
+
+            userProfiles[currentUser] = { name, status, photo };
+            saveData();
+            broadcast({ type: 'profile_update', from: currentUser, profile: userProfiles[currentUser] });
+            updateSidebarProfile();
+            renderUsers();
+            updateChatHeader();
+            profileModal.classList.remove('active');
+        }
+
+        profileBtn.addEventListener('click', () => {
+            loadProfile();
+            profileModal.classList.add('active');
+        });
+
+        profileCloseBtn.addEventListener('click', () => {
+            profileModal.classList.remove('active');
+        });
+
+        profileSaveBtn.addEventListener('click', saveProfile);
+
+        profilePreview.addEventListener('click', () => {
+            profileFileInput.click();
+        });
+
+        profileFileInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+            if (!file.type.startsWith('image/')) {
+                alert('Please select an image.');
+                profileFileInput.value = '';
+                return;
+            }
+            const reader = new FileReader();
+            reader.onload = (ev) => {
+                const dataUrl = ev.target.result;
+                profilePreviewImg.src = dataUrl;
+                profilePreviewImg.style.display = 'block';
+                profilePreviewText.style.display = 'none';
+            };
+            reader.readAsDataURL(file);
+        });
+
+        // ============================================================
+        //  STATUS
+        // ============================================================
+        statusBtn.addEventListener('click', () => {
+            statusTextInput.value = '';
+            statusPhotoInput.value = '';
+            statusPhotoPreview.innerHTML = '<span>No photo selected</span>';
+            statusTypeSelect.value = 'text';
+            statusTextArea.style.display = 'block';
+            statusPhotoArea.style.display = 'none';
+            newStatusModal.classList.add('active');
+        });
+
+        statusTypeSelect.addEventListener('change', () => {
+            const val = statusTypeSelect.value;
+            statusTextArea.style.display = val === 'text' ? 'block' : 'none';
+            statusPhotoArea.style.display = val === 'photo' ? 'block' : 'none';
+        });
+
+        statusPhotoInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+            if (!file.type.startsWith('image/')) {
+                alert('Please select an image.');
+                statusPhotoInput.value = '';
+                return;
+            }
+            const reader = new FileReader();
+            reader.onload = (ev) => {
+                const dataUrl = ev.target.result;
+                statusPhotoPreview.innerHTML =
+                    `<img src="${dataUrl}" style="max-width:100%;max-height:200px;border-radius:8px;" />`;
+            };
+            reader.readAsDataURL(file);
+        });
+
+        newStatusCloseBtn.addEventListener('click', () => {
+            newStatusModal.classList.remove('active');
+        });
+
+        newStatusPostBtn.addEventListener('click', () => {
+            const type = statusTypeSelect.value;
+            let content = '';
+            let photo = null;
+
+            if (type === 'text') {
+                content = statusTextInput.value.trim();
+                if (!content) { alert('Please enter a status.'); return; }
+            } else {
+                const file = statusPhotoInput.files[0];
+                if (!file) { alert('Please select a photo.'); return; }
+                // Read the file
+                const reader = new FileReader();
+                reader.onload = (ev) => {
+                    photo = ev.target.result;
+                    postStatus('photo', photo, '');
+                };
+                reader.readAsDataURL(file);
+                return;
+            }
+
+            postStatus('text', null, content);
+        });
+
+        function postStatus(type, photo, text) {
+            const status = {
+                type: type,
+                text: text || '',
+                photo: photo || null,
+                timestamp: Date.now()
+            };
+            statuses[currentUser] = status;
+            saveData();
+            broadcast({ type: 'status_update', from: currentUser, status });
+            newStatusModal.classList.remove('active');
+            renderUsers();
+            // Show own status
+            showStatus(currentUser);
+        }
+
+        // View status
+        function showStatus(user) {
+            const s = statuses[user];
+            if (!s) return;
+            if (s.timestamp < Date.now() - 24 * 60 * 60 * 1000) {
+                alert('Status expired.');
+                return;
+            }
+
+            statusName.textContent = getDisplayName(user);
+            const photo = getUserPhoto(user);
+            statusAvatar.innerHTML = photo ? `<img src="${photo}" />` : getInitials(user);
+            statusAvatar.style.background = photo ? 'transparent' : getAvatarColor(user);
+            statusTime.textContent = formatTime(s.timestamp) + ' · ' + formatDate(s.timestamp);
+
+            if (s.type === 'text') {
+                statusContent.innerHTML = `<div class="status-text">${escapeHtml(s.text)}</div>`;
+            } else if (s.type === 'photo' && s.photo) {
+                statusContent.innerHTML = `<img src="${s.photo}" class="status-image" />`;
+            }
+
+            statusView.classList.add('active');
+        }
+
+        statusCloseBtn.addEventListener('click', () => {
+            statusView.classList.remove('active');
+        });
+
+        // Click on user's status indicator in chat list
+        document.addEventListener('click', (e) => {
+            const item = e.target.closest('.user-item');
+            if (item) {
+                const user = item.dataset.user;
+                if (user && statuses[user] && statuses[user].timestamp > Date.now() - 24 * 60 * 60 * 1000) {
+                    // If clicked on the status indicator area
+                    if (e.target.closest('.avatar') || e.target.closest('.name')) {
+                        showStatus(user);
+                    }
+                }
+            }
+        });
+
+        // ============================================================
+        //  TABS
+        // ============================================================
+        tabButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                tabButtons.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                renderUsers();
+            });
+        });
+
+        // ============================================================
+        //  SEARCH
+        // ============================================================
+        searchInput.addEventListener('input', renderUsers);
+
+        // ============================================================
+        //  LOGOUT
+        // ============================================================
+        logoutBtn.addEventListener('click', () => {
+            if (isCallActive) endCall();
+            sendOfflineStatus();
+            currentUser = '';
+            currentPartner = '';
+            localStorage.removeItem('friendverse_' + currentUser);
+            mainApp.classList.remove('visible');
+            loginScreen.classList.remove('hidden');
+            usernameInput.value = '';
+            passwordInput.value = '';
+            usernameInput.focus();
+            if (channel) {
+                try { channel.close(); } catch (e) {}
+                channel = null;
+            }
+        });
+
+        // ============================================================
+        //  LOGIN
+        // ============================================================
+        loginForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const username = usernameInput.value.trim();
+            const password = passwordInput.value.trim();
+
+            if (!username || !password) {
+                loginError.textContent = 'Please fill in all fields.';
+                loginError.style.display = 'block';
+                return;
+            }
+            if (username.length < 2 || username.length > 20) {
+                loginError.textContent = 'Username must be 2–20 characters.';
+                loginError.style.display = 'block';
+                return;
+            }
+            if (password.length < 4) {
+                loginError.textContent = 'Password must be at least 4 characters.';
+                loginError.style.display = 'block';
+                return;
+            }
+
+            loginError.style.display = 'none';
+            loginBtn.disabled = true;
+            loginBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Signing in...';
+
+            // Simulate login
+            setTimeout(() => {
+                currentUser = username;
+                loginBtn.disabled = false;
+                loginBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Sign In';
+
+                // Init channel
+                initChannel();
+
+                // Load data
+                loadData();
+                loadAllProfiles();
+
+                // Set default profile
+                if (!userProfiles[currentUser]) {
+                    userProfiles[currentUser] = {
+                        name: currentUser,
+                        status: 'Hey there!',
+                        photo: null
+                    };
+                    saveData();
+                }
+
+                // Load statuses from others
+                loadAllProfiles();
+
+                // Update UI
+                updateSidebarProfile();
+                loginScreen.classList.add('hidden');
+                mainApp.classList.add('visible');
+
+                // Broadcast online
+                sendOnlineStatus();
+
+                // Ping other tabs to update their lists
+                broadcast({ type: 'ping', from: currentUser });
+
+                // Render
+                renderUsers();
+                updateChatHeader();
+
+                // Select first chat if exists
+                const chatKeys = Object.keys(messages).filter(k => k !== currentUser);
+                if (chatKeys.length > 0) {
+                    switchChat(chatKeys[0]);
+                } else {
+                    // Show empty state
+                    messagesContainer.innerHTML = `
+                <div class="empty-state">
+                  <i class="fas fa-comment-dots"></i>
+                  <p>Select a friend to start chatting</p>
+                </div>
+              `;
+                    document.getElementById('inputArea').style.display = 'flex';
+                }
+
+                // Periodic online ping
+                setInterval(() => {
+                    if (currentUser) {
+                        sendOnlineStatus();
+                    }
+                }, 30000);
+
+                // Auto-logout on tab close
+                window.addEventListener('beforeunload', () => {
+                    if (currentUser) {
+                        sendOfflineStatus();
+                    }
+                });
+
+            }, 800);
+        });
+
+        // ============================================================
+        //  INIT
+        // ============================================================
+        msgInput.style.height = 'auto';
+        usernameInput.focus();
+
+        console.log('🚀 FriendVerse — WhatsApp-style Demo');
+        console.log('📌 Open multiple tabs with different usernames to chat.');
+        console.log('📹 Voice & Video calls work between tabs via WebRTC.');
+        console.log('📁 Data stored in localStorage per user.');
+        console.log('💚 Status updates expire after 24 hours.');
+    </script>
+
+</body>
+</html>
