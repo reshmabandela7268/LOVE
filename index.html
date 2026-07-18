@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <title>FriendVerse — Mobile Chat & Calls</title>
+    <title>FriendVerse — WhatsApp Style</title>
 
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
@@ -19,7 +19,7 @@
         body {
             font-family: 'Inter', sans-serif;
             background: #0b141a;
-            color: #e8edf5;
+            color: #e9edef;
             height: 100%;
             width: 100%;
             overflow: hidden;
@@ -28,17 +28,16 @@
             left: 0;
         }
         ::-webkit-scrollbar {
-            width: 3px;
+            width: 4px;
         }
         ::-webkit-scrollbar-track {
             background: transparent;
         }
         ::-webkit-scrollbar-thumb {
-            background: #2a3942;
+            background: #374248;
             border-radius: 10px;
         }
 
-        /* ----- APP ----- */
         #app {
             width: 100%;
             height: 100%;
@@ -57,7 +56,7 @@
             position: absolute;
             inset: 0;
             z-index: 100;
-            background: rgba(11, 20, 26, 0.97);
+            background: rgba(11, 20, 26, 0.98);
             backdrop-filter: blur(16px);
             display: flex;
             align-items: center;
@@ -84,7 +83,7 @@
             margin-bottom: 16px;
         }
         .login-box .logo i {
-            font-size: 44px;
+            font-size: 48px;
             color: #25d366;
         }
         .login-box h1 {
@@ -114,7 +113,7 @@
             border-radius: 12px;
             border: 1px solid #2a3942;
             background: #0b141a;
-            color: #e8edf5;
+            color: #e9edef;
             font-size: 15px;
             outline: none;
             margin-bottom: 14px;
@@ -128,12 +127,12 @@
             padding: 14px;
             border: none;
             border-radius: 12px;
-            background: linear-gradient(135deg, #25d366, #128c7e);
-            color: #fff;
+            background: #25d366;
+            color: #111b21;
             font-weight: 700;
             font-size: 15px;
             cursor: pointer;
-            transition: transform 0.15s;
+            transition: transform 0.15s, background 0.15s;
         }
         .login-box .btn-primary:active {
             transform: scale(0.97);
@@ -141,6 +140,10 @@
         .login-box .btn-primary:disabled {
             opacity: 0.6;
             transform: none;
+        }
+        .login-box .btn-primary:hover {
+            background: #128c7e;
+            color: #fff;
         }
         .login-error {
             color: #f87171;
@@ -176,7 +179,7 @@
             opacity: 1;
         }
 
-        /* ----- TOP BAR ----- */
+        /* ----- TOP BAR (WhatsApp style) ----- */
         .topbar {
             display: flex;
             align-items: center;
@@ -193,20 +196,20 @@
             gap: 10px;
             flex: 1;
             min-width: 0;
+            cursor: pointer;
         }
         .topbar .left .avatar {
-            width: 36px;
-            height: 36px;
+            width: 38px;
+            height: 38px;
             border-radius: 50%;
             background: #2a3942;
             display: flex;
             align-items: center;
             justify-content: center;
             font-weight: 700;
-            font-size: 14px;
+            font-size: 15px;
             overflow: hidden;
             flex-shrink: 0;
-            cursor: pointer;
         }
         .topbar .left .avatar img {
             width: 100%;
@@ -219,13 +222,13 @@
         }
         .topbar .left .info .name {
             font-weight: 600;
-            font-size: 14px;
+            font-size: 15px;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
         }
         .topbar .left .info .status {
-            font-size: 11px;
+            font-size: 12px;
             color: #8696a0;
             white-space: nowrap;
             overflow: hidden;
@@ -240,11 +243,11 @@
             background: transparent;
             border: none;
             color: #aebac1;
-            width: 34px;
-            height: 34px;
+            width: 36px;
+            height: 36px;
             border-radius: 50%;
             cursor: pointer;
-            font-size: 16px;
+            font-size: 18px;
             transition: background 0.15s;
             display: flex;
             align-items: center;
@@ -256,8 +259,11 @@
         .topbar .right button.status-btn {
             color: #25d366;
         }
+        .topbar .right button.logout-btn {
+            color: #f87171;
+        }
 
-        /* ----- TABS ----- */
+        /* ----- TABS (WhatsApp style) ----- */
         .tabs {
             display: flex;
             background: #111b21;
@@ -266,22 +272,22 @@
         }
         .tabs button {
             flex: 1;
-            padding: 8px 0;
+            padding: 10px 0 8px;
             background: transparent;
             border: none;
             color: #8696a0;
             font-weight: 600;
-            font-size: 12px;
+            font-size: 13px;
             cursor: pointer;
-            border-bottom: 2px solid transparent;
+            border-bottom: 3px solid transparent;
             transition: all 0.2s;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 4px;
+            gap: 6px;
         }
         .tabs button i {
-            font-size: 14px;
+            font-size: 16px;
         }
         .tabs button.active {
             color: #25d366;
@@ -300,12 +306,12 @@
         }
         .search-wrap input {
             width: 100%;
-            padding: 8px 14px 8px 36px;
-            border-radius: 18px;
+            padding: 8px 14px 8px 38px;
+            border-radius: 20px;
             border: none;
             background: #1f2c33;
-            color: #e8edf5;
-            font-size: 13px;
+            color: #e9edef;
+            font-size: 14px;
             outline: none;
             transition: background 0.2s;
         }
@@ -321,7 +327,7 @@
             top: 50%;
             transform: translateY(-50%);
             color: #4a5568;
-            font-size: 13px;
+            font-size: 14px;
         }
         .search-wrap .clear-btn {
             position: absolute;
@@ -330,14 +336,14 @@
             transform: translateY(-50%);
             color: #4a5568;
             cursor: pointer;
-            font-size: 13px;
+            font-size: 14px;
             display: none;
         }
         .search-wrap .clear-btn.visible {
             display: block;
         }
 
-        /* ----- USER LIST ----- */
+        /* ----- USER LIST (Chats) ----- */
         .user-list-wrap {
             flex: 1;
             overflow-y: auto;
@@ -347,7 +353,7 @@
         .user-item {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
             padding: 10px 14px;
             cursor: pointer;
             transition: background 0.1s;
@@ -361,15 +367,15 @@
             border-left-color: #25d366;
         }
         .user-item .avatar {
-            width: 40px;
-            height: 40px;
+            width: 44px;
+            height: 44px;
             border-radius: 50%;
             background: #2a3942;
             display: flex;
             align-items: center;
             justify-content: center;
             font-weight: 700;
-            font-size: 14px;
+            font-size: 16px;
             flex-shrink: 0;
             overflow: hidden;
             position: relative;
@@ -381,10 +387,10 @@
         }
         .user-item .avatar .dot {
             position: absolute;
-            bottom: 0;
-            right: 0;
-            width: 12px;
-            height: 12px;
+            bottom: 1px;
+            right: 1px;
+            width: 13px;
+            height: 13px;
             border-radius: 50%;
             background: #4a5568;
             border: 2px solid #111b21;
@@ -398,7 +404,7 @@
         }
         .user-item .info .name {
             font-weight: 600;
-            font-size: 14px;
+            font-size: 15px;
             display: flex;
             align-items: center;
             gap: 4px;
@@ -408,11 +414,14 @@
             color: #25d366;
         }
         .user-item .info .last {
-            font-size: 12px;
+            font-size: 13px;
             color: #8696a0;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
+        }
+        .user-item .info .last .sender {
+            color: #aebac1;
         }
         .user-item .meta {
             text-align: right;
@@ -420,23 +429,23 @@
             min-width: 30px;
         }
         .user-item .meta .time {
-            font-size: 10px;
+            font-size: 11px;
             color: #8696a0;
         }
         .user-item .meta .unread {
             background: #25d366;
             color: #111b21;
-            font-size: 10px;
+            font-size: 11px;
             font-weight: 700;
             padding: 1px 8px;
             border-radius: 40px;
             display: inline-block;
-            margin-top: 2px;
-            min-width: 18px;
+            margin-top: 3px;
+            min-width: 20px;
             text-align: center;
         }
         .user-item .highlight {
-            background: rgba(37, 211, 102, 0.2);
+            background: rgba(37, 211, 102, 0.25);
             padding: 0 2px;
             border-radius: 2px;
         }
@@ -446,7 +455,7 @@
             color: #8696a0;
         }
         .empty-state i {
-            font-size: 40px;
+            font-size: 44px;
             opacity: 0.3;
             display: block;
             margin-bottom: 12px;
@@ -460,7 +469,7 @@
             margin-top: 4px;
         }
 
-        /* ----- CHAT VIEW ----- */
+        /* ----- CHAT VIEW (WhatsApp style) ----- */
         .chat-view {
             display: none;
             flex-direction: column;
@@ -475,7 +484,7 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 8px 12px;
+            padding: 6px 10px;
             background: #1f2c33;
             border-bottom: 1px solid #2a3942;
             flex-shrink: 0;
@@ -485,7 +494,7 @@
             background: none;
             border: none;
             color: #aebac1;
-            font-size: 18px;
+            font-size: 20px;
             cursor: pointer;
             padding: 4px 8px;
             border-radius: 50%;
@@ -499,17 +508,18 @@
             gap: 10px;
             flex: 1;
             min-width: 0;
+            cursor: pointer;
         }
         .chat-header .partner .avatar {
-            width: 34px;
-            height: 34px;
+            width: 36px;
+            height: 36px;
             border-radius: 50%;
             background: #2a3942;
             display: flex;
             align-items: center;
             justify-content: center;
             font-weight: 700;
-            font-size: 13px;
+            font-size: 14px;
             overflow: hidden;
             flex-shrink: 0;
         }
@@ -524,13 +534,13 @@
         }
         .chat-header .partner .info .name {
             font-weight: 600;
-            font-size: 14px;
+            font-size: 15px;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
         }
         .chat-header .partner .info .status {
-            font-size: 11px;
+            font-size: 12px;
             color: #8696a0;
         }
         .chat-header .partner .info .status.online {
@@ -549,7 +559,7 @@
             height: 34px;
             border-radius: 50%;
             cursor: pointer;
-            font-size: 16px;
+            font-size: 18px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -564,44 +574,48 @@
             color: #f87171;
         }
 
-        /* ----- MESSAGES ----- */
+        /* ----- MESSAGES (WhatsApp bubbles) ----- */
         .msgs-wrap {
             flex: 1;
             overflow-y: auto;
-            padding: 10px 12px;
+            padding: 10px 14px;
             display: flex;
             flex-direction: column;
             gap: 3px;
             -webkit-overflow-scrolling: touch;
+            background: #0b141a;
         }
         .msg {
-            max-width: 78%;
-            padding: 7px 12px;
+            max-width: 80%;
+            padding: 8px 14px;
             border-radius: 12px;
             font-size: 14px;
             line-height: 1.5;
             word-wrap: break-word;
             animation: pop 0.15s ease;
+            position: relative;
         }
         .msg.sent {
             align-self: flex-end;
             background: #005c4b;
+            color: #e9edef;
             border-bottom-right-radius: 4px;
         }
         .msg.recv {
             align-self: flex-start;
             background: #1f2c33;
+            color: #e9edef;
             border-bottom-left-radius: 4px;
         }
         .msg .time {
-            font-size: 9px;
+            font-size: 10px;
             opacity: 0.5;
-            margin-top: 3px;
+            margin-top: 4px;
             display: block;
             text-align: right;
         }
         .msg .media {
-            max-width: 180px;
+            max-width: 200px;
             border-radius: 8px;
             margin-top: 3px;
             display: block;
@@ -609,9 +623,9 @@
         .msg .audio-ctrl {
             margin-top: 3px;
             width: 100%;
-            max-width: 160px;
+            max-width: 170px;
             border-radius: 40px;
-            height: 30px;
+            height: 32px;
         }
         .msg .file-label {
             font-size: 11px;
@@ -636,26 +650,26 @@
         .date-div {
             text-align: center;
             color: #8696a0;
-            font-size: 11px;
-            padding: 6px 0;
+            font-size: 12px;
+            padding: 8px 0;
             font-weight: 500;
         }
         .typing-ind {
             align-self: flex-start;
             display: flex;
             align-items: center;
-            gap: 6px;
+            gap: 8px;
             padding: 4px 0;
             color: #8696a0;
-            font-size: 12px;
+            font-size: 13px;
         }
         .typing-ind .dots {
             display: flex;
             gap: 4px;
         }
         .typing-ind .dots span {
-            width: 7px;
-            height: 7px;
+            width: 8px;
+            height: 8px;
             background: #8696a0;
             border-radius: 50%;
             animation: blink 1.4s infinite both;
@@ -674,7 +688,7 @@
                 opacity: 0.4;
             }
             30% {
-                transform: translateY(-5px);
+                transform: translateY(-6px);
                 opacity: 1;
             }
         }
@@ -689,7 +703,7 @@
             }
         }
 
-        /* ----- INPUT ----- */
+        /* ----- INPUT BAR (WhatsApp style) ----- */
         .input-bar {
             padding: 6px 10px 10px;
             border-top: 1px solid #1f2c33;
@@ -704,8 +718,8 @@
             display: flex;
             align-items: flex-end;
             background: #0b141a;
-            border-radius: 18px;
-            padding: 3px 4px 3px 12px;
+            border-radius: 20px;
+            padding: 3px 4px 3px 14px;
             border: 1px solid #2a3942;
             transition: border 0.2s;
         }
@@ -717,10 +731,10 @@
             background: transparent;
             border: none;
             outline: none;
-            color: #e8edf5;
-            font-size: 14px;
+            color: #e9edef;
+            font-size: 15px;
             resize: none;
-            padding: 6px 0;
+            padding: 7px 0;
             max-height: 80px;
             font-family: inherit;
             line-height: 1.4;
@@ -732,7 +746,7 @@
             background: none;
             border: none;
             color: #4a5568;
-            font-size: 18px;
+            font-size: 20px;
             cursor: pointer;
             padding: 2px 4px;
         }
@@ -740,11 +754,11 @@
             background: none;
             border: none;
             color: #aebac1;
-            width: 36px;
-            height: 36px;
+            width: 38px;
+            height: 38px;
             border-radius: 50%;
             cursor: pointer;
-            font-size: 16px;
+            font-size: 18px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -772,14 +786,14 @@
                 transform: scale(1);
             }
             50% {
-                transform: scale(1.12);
+                transform: scale(1.15);
             }
         }
         .input-bar .file-input {
             display: none;
         }
 
-        /* ----- CALL OVERLAY ----- */
+        /* ----- CALL OVERLAY (WhatsApp style) ----- */
         #callOverlay {
             position: absolute;
             inset: 0;
@@ -831,17 +845,18 @@
             color: #4a5568;
         }
         .call-box .remote-wrap .ph i {
-            font-size: 56px;
+            font-size: 64px;
             display: block;
             margin-bottom: 8px;
+            color: #2a3942;
         }
         .call-box .remote-wrap .ph .name {
-            font-size: 20px;
-            color: #e8edf5;
+            font-size: 22px;
+            color: #e9edef;
             font-weight: 600;
         }
         .call-box .remote-wrap .ph .status {
-            font-size: 13px;
+            font-size: 14px;
             color: #8696a0;
         }
 
@@ -849,8 +864,8 @@
             position: absolute;
             bottom: 80px;
             right: 20px;
-            width: 100px;
-            height: 80px;
+            width: 110px;
+            height: 84px;
             border-radius: 12px;
             overflow: hidden;
             background: #0b141a;
@@ -870,25 +885,25 @@
             background: #1f2c33;
         }
         .call-box .local-wrap.voice i {
-            font-size: 32px;
+            font-size: 34px;
             color: #25d366;
         }
 
         .call-ctrl {
             display: flex;
-            gap: 14px;
-            margin-top: 16px;
+            gap: 16px;
+            margin-top: 18px;
             flex-wrap: wrap;
             justify-content: center;
         }
         .call-ctrl button {
-            width: 50px;
-            height: 50px;
+            width: 54px;
+            height: 54px;
             border-radius: 50%;
             border: none;
             background: #1f2c33;
-            color: #e8edf5;
-            font-size: 20px;
+            color: #e9edef;
+            font-size: 22px;
             cursor: pointer;
             transition: background 0.15s, transform 0.1s;
             display: flex;
@@ -902,6 +917,9 @@
             background: #dc2626;
             color: #fff;
         }
+        .call-ctrl button.end:hover {
+            background: #b91c1c;
+        }
         .call-ctrl button.muted {
             background: #4a3a3a;
             color: #f87171;
@@ -912,10 +930,11 @@
         }
         .call-ctrl .timer {
             color: #aebac1;
-            font-size: 14px;
+            font-size: 15px;
             display: flex;
             align-items: center;
-            padding: 0 10px;
+            padding: 0 12px;
+            font-weight: 500;
         }
 
         /* ----- INCOMING CALL ----- */
@@ -947,15 +966,15 @@
             max-width: 340px;
         }
         #incomingCall .card .avatar {
-            width: 64px;
-            height: 64px;
+            width: 72px;
+            height: 72px;
             border-radius: 50%;
             background: #2a3942;
             margin: 0 auto 10px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 26px;
+            font-size: 28px;
             font-weight: 700;
             overflow: hidden;
         }
@@ -971,15 +990,15 @@
         #incomingCall .card p {
             color: #8696a0;
             margin-bottom: 20px;
-            font-size: 13px;
+            font-size: 14px;
         }
         #incomingCall .card .btns {
             display: flex;
-            gap: 14px;
+            gap: 16px;
             justify-content: center;
         }
         #incomingCall .card .btns button {
-            padding: 10px 28px;
+            padding: 10px 30px;
             border: none;
             border-radius: 40px;
             font-weight: 700;
@@ -993,12 +1012,19 @@
             background: #25d366;
             color: #111b21;
         }
+        #incomingCall .card .btns .accept:hover {
+            background: #128c7e;
+            color: #fff;
+        }
         #incomingCall .card .btns .reject {
             background: #dc2626;
             color: #fff;
         }
+        #incomingCall .card .btns .reject:hover {
+            background: #b91c1c;
+        }
 
-        /* ----- PROFILE MODAL ----- */
+        /* ----- PROFILE MODAL (WhatsApp style) ----- */
         .modal {
             position: absolute;
             inset: 0;
@@ -1031,6 +1057,7 @@
             font-size: 18px;
             text-align: center;
             margin-bottom: 14px;
+            color: #e9edef;
         }
         .modal .box .avatar-up {
             display: flex;
@@ -1040,19 +1067,23 @@
             margin-bottom: 14px;
         }
         .modal .box .avatar-up .preview {
-            width: 80px;
-            height: 80px;
+            width: 84px;
+            height: 84px;
             border-radius: 50%;
             background: #2a3942;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 32px;
+            font-size: 34px;
             font-weight: 700;
             overflow: hidden;
             cursor: pointer;
             border: 2px solid #2a3942;
             position: relative;
+            transition: border 0.2s;
+        }
+        .modal .box .avatar-up .preview:hover {
+            border-color: #25d366;
         }
         .modal .box .avatar-up .preview img {
             width: 100%;
@@ -1072,18 +1103,18 @@
             font-size: 12px;
             border-radius: 50%;
         }
-        .modal .box .avatar-up .preview:active .overlay {
+        .modal .box .avatar-up .preview:hover .overlay {
             opacity: 1;
         }
         .modal .box .avatar-up input[type="file"] {
             display: none;
         }
         .modal .box label {
-            font-size: 12px;
+            font-size: 13px;
             font-weight: 600;
             color: #d1d7db;
             display: block;
-            margin-bottom: 3px;
+            margin-bottom: 4px;
         }
         .modal .box input,
         .modal .box textarea {
@@ -1092,7 +1123,7 @@
             border-radius: 10px;
             border: 1px solid #2a3942;
             background: #0b141a;
-            color: #e8edf5;
+            color: #e9edef;
             font-size: 14px;
             outline: none;
             margin-bottom: 10px;
@@ -1113,7 +1144,7 @@
             margin-top: 4px;
         }
         .modal .box .row button {
-            padding: 8px 20px;
+            padding: 8px 22px;
             border: none;
             border-radius: 10px;
             font-weight: 600;
@@ -1124,9 +1155,17 @@
             background: #25d366;
             color: #111b21;
         }
+        .modal .box .row .primary:hover {
+            background: #128c7e;
+            color: #fff;
+        }
         .modal .box .row .secondary {
             background: #2a3942;
             color: #aebac1;
+        }
+        .modal .box .row .secondary:hover {
+            background: #3a4a52;
+            color: #e9edef;
         }
 
         /* ----- STATUS VIEW ----- */
@@ -1154,15 +1193,15 @@
             text-align: center;
         }
         #statusView .content .avatar {
-            width: 64px;
-            height: 64px;
+            width: 68px;
+            height: 68px;
             border-radius: 50%;
             background: #2a3942;
             margin: 0 auto 8px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 26px;
+            font-size: 28px;
             font-weight: 700;
             overflow: hidden;
         }
@@ -1172,7 +1211,7 @@
             object-fit: cover;
         }
         #statusView .content .name {
-            font-size: 18px;
+            font-size: 19px;
             font-weight: 600;
         }
         #statusView .content .time {
@@ -1181,7 +1220,7 @@
             margin-bottom: 12px;
         }
         #statusView .content .text {
-            font-size: 17px;
+            font-size: 18px;
             padding: 20px;
             background: #1f2c33;
             border-radius: 14px;
@@ -1203,6 +1242,11 @@
             border-radius: 40px;
             font-size: 13px;
             cursor: pointer;
+            transition: background 0.15s;
+        }
+        #statusView .content .close:hover {
+            background: #3a4a52;
+            color: #e9edef;
         }
 
         /* ----- NEW STATUS ----- */
@@ -1212,11 +1256,14 @@
             border-radius: 10px;
             border: 1px solid #2a3942;
             background: #0b141a;
-            color: #e8edf5;
+            color: #e9edef;
             font-size: 14px;
             outline: none;
             margin-bottom: 10px;
             font-family: inherit;
+        }
+        #newStatusModal .box select:focus {
+            border-color: #25d366;
         }
         #newStatusModal .box .preview-photo {
             max-width: 100%;
@@ -1234,19 +1281,19 @@
         }
         #newStatusModal .box .preview-photo img {
             max-width: 100%;
-            max-height: 150px;
+            max-height: 160px;
             border-radius: 8px;
         }
 
         /* ----- TOAST ----- */
         .toast {
             position: fixed;
-            bottom: 20px;
+            bottom: 24px;
             left: 50%;
             transform: translateX(-50%);
             z-index: 999;
             background: #1f2c33;
-            color: #e8edf5;
+            color: #e9edef;
             padding: 10px 20px;
             border-radius: 12px;
             border: 1px solid #2a3942;
@@ -1257,6 +1304,7 @@
             pointer-events: none;
             max-width: 90%;
             text-align: center;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
         }
         .toast.show {
             opacity: 1;
@@ -1270,7 +1318,7 @@
             border-color: #25d366;
         }
 
-        /* ----- RESPONSIVE TWEAKS ----- */
+        /* ----- RESPONSIVE ----- */
         @media (max-width: 500px) {
             .login-box {
                 padding: 28px 20px;
@@ -1283,69 +1331,69 @@
                 min-height: 48px;
             }
             .topbar .left .avatar {
-                width: 32px;
-                height: 32px;
-                font-size: 12px;
-            }
-            .topbar .left .info .name {
+                width: 34px;
+                height: 34px;
                 font-size: 13px;
             }
-            .topbar .left .info .status {
-                font-size: 10px;
-            }
-            .topbar .right button {
-                width: 30px;
-                height: 30px;
+            .topbar .left .info .name {
                 font-size: 14px;
             }
-            .tabs button {
+            .topbar .left .info .status {
                 font-size: 11px;
-                padding: 6px 0;
+            }
+            .topbar .right button {
+                width: 32px;
+                height: 32px;
+                font-size: 16px;
+            }
+            .tabs button {
+                font-size: 12px;
+                padding: 8px 0 6px;
             }
             .tabs button i {
-                font-size: 12px;
+                font-size: 14px;
             }
             .user-item {
                 padding: 8px 10px;
             }
             .user-item .avatar {
-                width: 36px;
-                height: 36px;
-                font-size: 12px;
+                width: 40px;
+                height: 40px;
+                font-size: 14px;
             }
             .user-item .info .name {
-                font-size: 13px;
+                font-size: 14px;
             }
             .user-item .info .last {
-                font-size: 11px;
+                font-size: 12px;
             }
             .chat-header {
                 padding: 4px 8px;
-                min-height: 44px;
+                min-height: 46px;
             }
             .chat-header .partner .avatar {
-                width: 30px;
-                height: 30px;
+                width: 32px;
+                height: 32px;
                 font-size: 12px;
             }
             .chat-header .partner .info .name {
-                font-size: 13px;
-            }
-            .chat-header .partner .info .status {
-                font-size: 10px;
-            }
-            .chat-header .actions button {
-                width: 30px;
-                height: 30px;
                 font-size: 14px;
             }
+            .chat-header .partner .info .status {
+                font-size: 11px;
+            }
+            .chat-header .actions button {
+                width: 32px;
+                height: 32px;
+                font-size: 16px;
+            }
             .msg {
-                font-size: 13px;
-                padding: 6px 10px;
-                max-width: 85%;
+                font-size: 14px;
+                padding: 7px 12px;
+                max-width: 88%;
             }
             .msg .media {
-                max-width: 150px;
+                max-width: 160px;
             }
             .input-bar {
                 padding: 4px 8px 8px;
@@ -1355,24 +1403,24 @@
                 padding: 2px 4px 2px 10px;
             }
             .input-bar .wrap textarea {
-                font-size: 13px;
-                padding: 4px 0;
+                font-size: 14px;
+                padding: 5px 0;
             }
             .input-bar .action-btn {
-                width: 32px;
-                height: 32px;
-                font-size: 14px;
+                width: 34px;
+                height: 34px;
+                font-size: 16px;
             }
             .call-box .local-wrap {
-                width: 80px;
-                height: 64px;
-                bottom: 70px;
+                width: 84px;
+                height: 66px;
+                bottom: 72px;
                 right: 14px;
             }
             .call-ctrl button {
-                width: 44px;
-                height: 44px;
-                font-size: 17px;
+                width: 48px;
+                height: 48px;
+                font-size: 19px;
             }
             #incomingCall .card {
                 padding: 24px 20px;
@@ -1381,42 +1429,42 @@
                 padding: 20px 16px;
             }
             .call-box .remote-wrap .ph i {
-                font-size: 40px;
+                font-size: 44px;
             }
             .call-box .remote-wrap .ph .name {
-                font-size: 17px;
+                font-size: 18px;
             }
         }
 
         @media (max-width: 380px) {
             .tabs button {
-                font-size: 9px;
+                font-size: 10px;
             }
             .tabs button i {
-                font-size: 10px;
+                font-size: 12px;
             }
             .user-item {
                 padding: 6px 8px;
             }
             .user-item .avatar {
-                width: 30px;
-                height: 30px;
-                font-size: 10px;
+                width: 34px;
+                height: 34px;
+                font-size: 12px;
             }
             .user-item .info .name {
-                font-size: 12px;
+                font-size: 13px;
             }
             .user-item .info .last {
-                font-size: 10px;
+                font-size: 11px;
             }
             .msg {
-                font-size: 12px;
-                max-width: 90%;
+                font-size: 13px;
+                max-width: 92%;
             }
             .call-box .local-wrap {
-                width: 64px;
-                height: 50px;
-                bottom: 60px;
+                width: 68px;
+                height: 54px;
+                bottom: 62px;
                 right: 10px;
             }
         }
@@ -1448,7 +1496,7 @@
                     <input type="password" id="passwordInput" placeholder="Min 4 characters" required minlength="4" />
                     <div class="login-error" id="loginError">Invalid credentials.</div>
                     <button type="submit" class="btn-primary" id="loginBtn"><i class="fas fa-sign-in-alt"></i> Sign In</button>
-                    <div class="hint"><i class="fas fa-info-circle"></i> Open multiple tabs with different usernames to chat!</div>
+                    <div class="hint"><i class="fas fa-info-circle"></i> Open multiple tabs with different usernames to chat in real-time!</div>
                 </form>
             </div>
         </div>
@@ -1470,7 +1518,7 @@
                 </div>
                 <div class="right">
                     <button class="status-btn" id="statusBtn" title="Status"><i class="fas fa-circle-plus"></i></button>
-                    <button id="logoutBtn" title="Logout"><i class="fas fa-sign-out-alt"></i></button>
+                    <button class="logout-btn" id="logoutBtn" title="Logout"><i class="fas fa-sign-out-alt"></i></button>
                 </div>
             </div>
 
@@ -1485,7 +1533,7 @@
             <!-- SEARCH -->
             <div class="search-wrap">
                 <span class="search-icon"><i class="fas fa-search"></i></span>
-                <input type="text" id="searchInput" placeholder="Search users or chats..." />
+                <input type="text" id="searchInput" placeholder="Search or start a new chat" />
                 <span class="clear-btn" id="searchClear"><i class="fas fa-times-circle"></i></span>
             </div>
 
@@ -1498,7 +1546,7 @@
             <div class="chat-view" id="chatView">
                 <div class="chat-header">
                     <button class="back" id="chatBack"><i class="fas fa-arrow-left"></i></button>
-                    <div class="partner">
+                    <div class="partner" id="chatPartnerClick">
                         <div class="avatar" id="chatAvatar">?</div>
                         <div class="info">
                             <div class="name" id="chatPartnerName">Friend</div>
@@ -1506,8 +1554,8 @@
                         </div>
                     </div>
                     <div class="actions">
-                        <button class="call-btn" id="voiceCallBtn" title="Voice"><i class="fas fa-phone"></i></button>
-                        <button class="call-btn" id="videoCallBtn" title="Video"><i class="fas fa-video"></i></button>
+                        <button class="call-btn" id="voiceCallBtn" title="Voice call"><i class="fas fa-phone"></i></button>
+                        <button class="call-btn" id="videoCallBtn" title="Video call"><i class="fas fa-video"></i></button>
                     </div>
                 </div>
 
@@ -1523,8 +1571,8 @@
                         <textarea id="msgInput" rows="1" placeholder="Type a message..." maxlength="2000"></textarea>
                         <button class="emoji-btn" id="emojiBtn">😊</button>
                     </div>
-                    <button class="action-btn" id="recordBtn" title="Voice"><i class="fas fa-microphone"></i></button>
-                    <button class="action-btn" id="photoBtn" title="Photo"><i class="fas fa-image"></i></button>
+                    <button class="action-btn" id="recordBtn" title="Voice message"><i class="fas fa-microphone"></i></button>
+                    <button class="action-btn" id="photoBtn" title="Send photo"><i class="fas fa-image"></i></button>
                     <input type="file" id="fileInput" class="file-input" accept="image/*" />
                     <button class="action-btn send" id="sendBtn"><i class="fas fa-arrow-up"></i></button>
                 </div>
@@ -1576,13 +1624,13 @@
                     <div class="preview" id="profilePreview">
                         <span id="profilePreviewText">?</span>
                         <img id="profilePreviewImg" style="display:none;" />
-                        <div class="overlay"><i class="fas fa-camera"></i></div>
+                        <div class="overlay"><i class="fas fa-camera"></i> Change</div>
                     </div>
                     <input type="file" id="profileFileInput" accept="image/*" />
                 </div>
                 <label>Display Name</label>
                 <input type="text" id="profileNameInput" />
-                <label>Status</label>
+                <label>About</label>
                 <textarea id="profileStatusInput" placeholder="What's on your mind?"></textarea>
                 <div class="row">
                     <button class="secondary" id="profileCloseBtn">Cancel</button>
@@ -1617,7 +1665,7 @@
                 </div>
                 <div id="statusPhotoArea" style="display:none;">
                     <label>Choose Photo</label>
-                    <input type="file" id="statusPhotoInput" accept="image/*" style="margin-bottom:6px;width:100%;padding:6px;background:#0b141a;border-radius:8px;border:1px solid #2a3942;color:#e8edf5;" />
+                    <input type="file" id="statusPhotoInput" accept="image/*" style="margin-bottom:6px;width:100%;padding:6px;background:#0b141a;border-radius:8px;border:1px solid #2a3942;color:#e9edef;" />
                     <div class="preview-photo" id="statusPhotoPreview"><span>No photo selected</span></div>
                 </div>
                 <div class="row" style="margin-top:10px;">
@@ -1631,10 +1679,10 @@
 
     <script>
         // ============================================================
-        // FRIENDVERSE — Fully working multi-tab demo
-        // Uses BroadcastChannel for cross-tab communication
-        // WebRTC for peer-to-peer calls between tabs
-        // Mobile-first responsive design
+        // FRIENDVERSE — WhatsApp-style Multi-tab Chat & Calls
+        // Uses BroadcastChannel for cross-tab messaging
+        // WebRTC for peer-to-peer calls
+        // Mobile-first, WhatsApp-inspired UI
         // ============================================================
 
         // ----- DOM refs -----
@@ -1672,6 +1720,7 @@
         const chatPartnerName = $('#chatPartnerName');
         const chatPartnerStatus = $('#chatPartnerStatus');
         const chatAvatar = $('#chatAvatar');
+        const chatPartnerClick = $('#chatPartnerClick');
 
         const voiceCallBtn = $('#voiceCallBtn');
         const videoCallBtn = $('#videoCallBtn');
@@ -1870,6 +1919,40 @@
             } catch (e) { console.warn(e); }
         }
 
+        // ----- Seed default users -----
+        function seedDefaultUsers() {
+            const defaults = ['Alice', 'Bob', 'Charlie', 'Diana', 'Eve', 'Frank', 'Grace', 'Henry'];
+            for (const u of defaults) {
+                if (u !== currentUser) {
+                    registeredUsers.add(u);
+                    if (!userProfiles[u]) {
+                        userProfiles[u] = { name: u, status: 'Hey there!', photo: null };
+                    }
+                    if (Math.random() > 0.4) onlineUsers.add(u);
+                }
+            }
+            const now = Date.now();
+            for (const u of defaults) {
+                if (u !== currentUser && Math.random() > 0.5) {
+                    statuses[u] = {
+                        type: 'text',
+                        text: 'Having a great day! 😊',
+                        photo: null,
+                        timestamp: now - Math.random() * 3600000
+                    };
+                }
+            }
+            for (const u of defaults) {
+                if (u !== currentUser) {
+                    const data = {
+                        userProfiles: { [u]: userProfiles[u] },
+                        statuses: statuses[u] ? { [u]: statuses[u] } : {}
+                    };
+                    try { localStorage.setItem('fv_' + u, JSON.stringify(data)); } catch (e) {}
+                }
+            }
+        }
+
         // ----- BroadcastChannel -----
         function initChannel() {
             try {
@@ -2005,11 +2088,13 @@
                 const unreadCount = unread[u] || 0;
                 const last = messages[u]?.[messages[u].length - 1];
                 let lastText = '';
+                let lastSender = '';
                 if (last) {
                     if (last.type === 'text') lastText = last.content;
-                    else if (last.type === 'voice') lastText = '🎤 Voice';
+                    else if (last.type === 'voice') lastText = '🎤 Voice message';
                     else if (last.type === 'photo') lastText = '📷 Photo';
                     else if (last.type === 'call') lastText = '📞 Call';
+                    lastSender = last.from === currentUser ? 'You: ' : '';
                 }
                 const lastTime = last ? formatTime(last.timestamp) : '';
                 const displayName = getDisplayName(u);
@@ -2034,7 +2119,7 @@
                 </div>
                 <div class="info">
                   <div class="name">${nameHtml} ${hasStatus ? '<span class="status-badge">●</span>' : ''}</div>
-                  <div class="last">${lastText ? (last.from === currentUser ? 'You: ' : '') + escapeHtml(lastText) : (tab === 'find' ? (on ? '🟢 Online' : '⚪ Offline') : 'Start chatting...')}</div>
+                  <div class="last">${lastText ? `<span class="sender">${lastSender}</span>${escapeHtml(lastText)}` : (tab === 'find' ? (on ? '🟢 Online' : '⚪ Offline') : 'Start chatting...')}</div>
                 </div>
                 <div class="meta">
                   ${lastTime ? `<div class="time">${lastTime}</div>` : ''}
@@ -2050,7 +2135,7 @@
                     'chats': 'No chats yet. Start a new conversation!',
                     'calls': 'No call history.',
                     'statuses': 'No status updates from friends.',
-                    'find': 'No users found. Invite friends to join!'
+                    'find': 'No users found. Try opening another tab with a different username.'
                 };
                 html = `<div class="empty-state"><i class="fas fa-${tab === 'find' ? 'users-slash' : tab === 'calls' ? 'phone-slash' : tab === 'statuses' ? 'circle-slash' : 'comment-slash'}"></i><p>${msgs[tab]}</p></div>`;
             }
@@ -2074,7 +2159,6 @@
             unread[partner] = 0;
             saveData();
 
-            // Switch to chats tab
             tabButtons.forEach(b => b.classList.remove('active'));
             document.querySelector('[data-tab="chats"]').classList.add('active');
             activeTab = 'chats';
@@ -2097,6 +2181,14 @@
         }
 
         chatBack.addEventListener('click', closeChat);
+
+        // Click partner name to view profile/status
+        chatPartnerClick.addEventListener('click', () => {
+            if (currentPartner && statuses[currentPartner] &&
+                statuses[currentPartner].timestamp > Date.now() - 24 * 60 * 60 * 1000) {
+                showStatus(currentPartner);
+            }
+        });
 
         // ----- Update chat header -----
         function updateChatHeader() {
@@ -2189,7 +2281,7 @@
             } else if (m.type === 'voice') {
                 content = `
               <audio controls class="audio-ctrl" src="${m.content}"></audio>
-              <div class="file-label"><i class="fas fa-microphone"></i> Voice</div>
+              <div class="file-label"><i class="fas fa-microphone"></i> Voice message</div>
             `;
             } else if (m.type === 'photo') {
                 content = `
@@ -2243,6 +2335,11 @@
         function handleIncomingMsg(msg) {
             addMessage(msg);
             if (msg.from === currentPartner) showTyping(false);
+            // Notify with toast if not in chat
+            if (msg.from !== currentPartner && msg.from !== currentUser) {
+                showToast('📩 ' + getDisplayName(msg.from) + ': ' + (msg.type === 'text' ? msg.content : 'sent a ' + msg
+                .type), 'info', 2000);
+            }
         }
 
         // ----- Send -----
@@ -2349,6 +2446,7 @@
                     reader.onload = () => {
                         const dataUrl = reader.result;
                         sendMedia('voice', dataUrl);
+                        showToast('Voice message sent!', 'success');
                     };
                     reader.readAsDataURL(blob);
                     if (recorderStream) { recorderStream.getTracks().forEach(t => t.stop());
@@ -2402,16 +2500,16 @@
         // ============================================================
         emojiBtn.addEventListener('click', () => {
             const emojis = ['😊', '😂', '❤️', '🔥', '👍', '👋', '😍', '🤩', '😎', '💯', '🎉', '✨', '🌟', '💪', '🙌', '🤗', '😘',
-                '🥰', '😁', '🤣', '😅', '😆', '😉', '🥳', '🤔', '😴'
+                '🥰', '😁', '🤣', '😅', '😆', '😉', '🥳', '🤔', '😴', '👀', '🙈', '💀', '👻'
             ];
             const picker = document.createElement('div');
             picker.style.cssText =
-                'position:fixed;bottom:70px;left:10px;background:#1f2c33;border-radius:14px;padding:10px;display:flex;flex-wrap:wrap;gap:3px;max-width:260px;border:1px solid #2a3942;z-index:250;box-shadow:0 8px 30px rgba(0,0,0,0.6);';
+                'position:fixed;bottom:72px;left:10px;background:#1f2c33;border-radius:14px;padding:10px;display:flex;flex-wrap:wrap;gap:3px;max-width:270px;border:1px solid #2a3942;z-index:250;box-shadow:0 8px 30px rgba(0,0,0,0.6);';
             emojis.forEach(e => {
                 const btn = document.createElement('button');
                 btn.textContent = e;
                 btn.style.cssText =
-                    'background:none;border:none;font-size:24px;cursor:pointer;padding:3px 6px;border-radius:6px;';
+                    'background:none;border:none;font-size:26px;cursor:pointer;padding:3px 6px;border-radius:6px;';
                 btn.onmouseover = () => btn.style.background = '#2a3942';
                 btn.onmouseout = () => btn.style.background = 'transparent';
                 btn.onclick = () => {
@@ -2475,7 +2573,7 @@
         });
 
         // ============================================================
-        // WEBRTC
+        // WEBRTC — Voice & Video Calls
         // ============================================================
         const rtcConfig = {
             iceServers: [{ urls: 'stun:stun.l.google.com:19302' }, { urls: 'stun:stun1.l.google.com:19302' }]
@@ -2694,6 +2792,7 @@
                 const dur = callStartTime ? Date.now() - callStartTime : 0;
                 addCallLog(callPartner, dur, false);
                 endCall();
+                showToast(getDisplayName(callPartner) + ' ended the call', 'info');
             }
         }
 
@@ -2888,7 +2987,7 @@
             reader.onload = (ev) => {
                 const dataUrl = ev.target.result;
                 statusPhotoPreview.innerHTML =
-                    `<img src="${dataUrl}" style="max-width:100%;max-height:150px;border-radius:8px;" />`;
+                    `<img src="${dataUrl}" style="max-width:100%;max-height:160px;border-radius:8px;" />`;
             };
             reader.readAsDataURL(file);
         });
@@ -2966,26 +3065,16 @@
                 activeTab = btn.dataset.tab;
                 if (activeTab === 'find') {
                     searchInput.placeholder = 'Search for users...';
-                    loadRegisteredUsers();
+                    loadAllProfiles();
+                    if (registeredUsers.size === 0) seedDefaultUsers();
                 } else if (activeTab === 'chats') {
-                    searchInput.placeholder = 'Search chats...';
+                    searchInput.placeholder = 'Search or start a new chat';
                 } else {
                     searchInput.placeholder = 'Search...';
                 }
                 renderUsers();
             });
         });
-
-        function loadRegisteredUsers() {
-            try {
-                const keys = Object.keys(localStorage).filter(k => k.startsWith('fv_'));
-                for (const key of keys) {
-                    const user = key.replace('fv_', '');
-                    if (user && user !== currentUser) registeredUsers.add(user);
-                }
-            } catch (e) {}
-            renderUsers();
-        }
 
         searchInput.addEventListener('input', () => {
             const val = searchInput.value;
@@ -3054,6 +3143,10 @@
                 loadData();
                 loadAllProfiles();
 
+                if (registeredUsers.size === 0) {
+                    seedDefaultUsers();
+                }
+
                 if (!userProfiles[currentUser]) {
                     userProfiles[currentUser] = { name: currentUser, status: 'Hey there!', photo: null };
                     saveData();
@@ -3096,11 +3189,11 @@
         msgInput.style.height = 'auto';
         usernameInput.focus();
 
-        console.log('🚀 FriendVerse — Mobile-ready Multi-tab Chat & Calls');
-        console.log('📌 Open multiple tabs with different usernames to chat.');
+        console.log('🚀 FriendVerse — WhatsApp-style Chat & Calls');
+        console.log('📌 Open multiple tabs with different usernames to chat in real-time.');
         console.log('📹 Voice/Video calls work between tabs via WebRTC.');
         console.log('💚 Status updates expire after 24 hours.');
-        console.log('📱 Fully responsive for mobile devices.');
+        console.log('📱 Fully responsive — works great on mobile.');
         console.log('🔍 Use the "Find" tab to discover registered users.');
     </script>
 
