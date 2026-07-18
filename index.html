@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>FriendVerse — WhatsApp Style</title>
+    <title>FriendVerse — Advanced Chat & Calls</title>
 
     <!-- Font & Icons -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet" />
@@ -57,8 +57,8 @@
             position: absolute;
             inset: 0;
             z-index: 100;
-            background: rgba(11, 20, 26, 0.95);
-            backdrop-filter: blur(16px);
+            background: rgba(11, 20, 26, 0.96);
+            backdrop-filter: blur(18px);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -85,7 +85,7 @@
             margin-bottom: 20px;
         }
         .login-box .logo i {
-            font-size: 48px;
+            font-size: 52px;
             color: #25d366;
         }
         .login-box h1 {
@@ -140,6 +140,11 @@
             transform: scale(1.02);
             box-shadow: 0 8px 24px rgba(37, 211, 102, 0.3);
         }
+        .login-box .btn-primary:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
         .login-error {
             color: #f87171;
             font-size: 13px;
@@ -163,8 +168,8 @@
 
         /* ----- SIDEBAR ----- */
         .sidebar {
-            width: 320px;
-            min-width: 320px;
+            width: 340px;
+            min-width: 340px;
             background: #111b21;
             border-right: 1px solid #1f2c33;
             display: flex;
@@ -175,16 +180,18 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 16px 20px;
+            padding: 14px 18px;
             background: #1f2c33;
             border-bottom: 1px solid #2a3942;
-            min-height: 72px;
+            min-height: 68px;
         }
         .sidebar-header .profile-wrap {
             display: flex;
             align-items: center;
             gap: 12px;
             cursor: pointer;
+            flex: 1;
+            min-width: 0;
         }
         .sidebar-header .profile-wrap .avatar {
             width: 44px;
@@ -206,21 +213,29 @@
             height: 100%;
             object-fit: cover;
         }
+        .sidebar-header .profile-wrap .info {
+            flex: 1;
+            min-width: 0;
+        }
         .sidebar-header .profile-wrap .info .name {
             font-weight: 600;
             font-size: 15px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
         .sidebar-header .profile-wrap .info .status-text {
             font-size: 12px;
             color: #8696a0;
-            max-width: 140px;
+            white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
-            white-space: nowrap;
+            max-width: 140px;
         }
         .sidebar-header .actions {
             display: flex;
-            gap: 4px;
+            gap: 2px;
+            flex-shrink: 0;
         }
         .sidebar-header .actions button {
             background: transparent;
@@ -235,12 +250,14 @@
         }
         .sidebar-header .actions button:hover {
             background: #2a3942;
+            color: #e8edf5;
         }
 
         .sidebar-tabs {
             display: flex;
             border-bottom: 1px solid #1f2c33;
             background: #111b21;
+            flex-shrink: 0;
         }
         .sidebar-tabs button {
             flex: 1;
@@ -263,21 +280,51 @@
         }
 
         .search-box {
-            padding: 8px 16px;
+            padding: 8px 14px;
             background: #111b21;
+            flex-shrink: 0;
+            position: relative;
+        }
+        .search-box .search-icon {
+            position: absolute;
+            left: 26px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #4a5568;
+            font-size: 14px;
         }
         .search-box input {
             width: 100%;
-            padding: 8px 16px;
+            padding: 8px 16px 8px 40px;
             border-radius: 20px;
             border: none;
             background: #1f2c33;
             color: #e8edf5;
             font-size: 14px;
             outline: none;
+            transition: background 0.2s;
         }
         .search-box input::placeholder {
-            color: #8696a0;
+            color: #4a5568;
+        }
+        .search-box input:focus {
+            background: #2a3942;
+        }
+        .search-box .search-clear {
+            position: absolute;
+            right: 26px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #4a5568;
+            cursor: pointer;
+            font-size: 14px;
+            display: none;
+        }
+        .search-box .search-clear.visible {
+            display: block;
+        }
+        .search-box .search-clear:hover {
+            color: #aebac1;
         }
 
         .user-list-container {
@@ -346,6 +393,13 @@
         .user-item .info .name {
             font-weight: 600;
             font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .user-item .info .name .status-badge {
+            font-size: 12px;
+            color: #25d366;
         }
         .user-item .info .last-msg {
             font-size: 13px;
@@ -375,10 +429,13 @@
             border-radius: 40px;
             display: inline-block;
             margin-top: 4px;
+            min-width: 20px;
+            text-align: center;
         }
-        .user-item .status-indicator {
-            font-size: 18px;
-            margin-left: 4px;
+        .user-item .search-highlight {
+            background: rgba(37, 211, 102, 0.2);
+            padding: 0 2px;
+            border-radius: 2px;
         }
 
         /* ----- CHAT AREA ----- */
@@ -397,26 +454,35 @@
             flex-direction: column;
             color: #8696a0;
             gap: 12px;
+            padding: 20px;
         }
         .chat-area .empty-state i {
             font-size: 56px;
             opacity: 0.3;
         }
+        .chat-area .empty-state .big-icon {
+            font-size: 72px;
+            color: #25d366;
+            opacity: 0.4;
+        }
 
         .chat-header {
-            padding: 12px 20px;
+            padding: 10px 18px;
             border-bottom: 1px solid #1f2c33;
             display: flex;
             align-items: center;
             justify-content: space-between;
             background: #1f2c33;
-            min-height: 64px;
+            min-height: 60px;
+            flex-shrink: 0;
         }
         .chat-header .chat-with {
             display: flex;
             align-items: center;
             gap: 12px;
             cursor: pointer;
+            flex: 1;
+            min-width: 0;
         }
         .chat-header .chat-with .avatar {
             width: 40px;
@@ -436,9 +502,16 @@
             height: 100%;
             object-fit: cover;
         }
+        .chat-header .chat-with .info {
+            flex: 1;
+            min-width: 0;
+        }
         .chat-header .chat-with .info .name {
             font-weight: 600;
             font-size: 15px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
         .chat-header .chat-with .info .status {
             font-size: 12px;
@@ -449,7 +522,8 @@
         }
         .chat-header .actions {
             display: flex;
-            gap: 4px;
+            gap: 2px;
+            flex-shrink: 0;
         }
         .chat-header .actions button {
             background: transparent;
@@ -460,7 +534,7 @@
             border-radius: 50%;
             cursor: pointer;
             font-size: 18px;
-            transition: background 0.15s;
+            transition: background 0.15s, color 0.15s;
         }
         .chat-header .actions button:hover {
             background: #2a3942;
@@ -483,7 +557,7 @@
         .messages-container {
             flex: 1;
             overflow-y: auto;
-            padding: 16px 20px;
+            padding: 12px 16px;
             display: flex;
             flex-direction: column;
             gap: 4px;
@@ -553,6 +627,36 @@
         .message .call-log .answered {
             color: #25d366;
         }
+        .message .typing-indicator {
+            display: flex;
+            gap: 4px;
+            padding: 4px 0;
+        }
+        .message .typing-indicator span {
+            width: 8px;
+            height: 8px;
+            background: #8696a0;
+            border-radius: 50%;
+            animation: typing 1.4s infinite both;
+        }
+        .message .typing-indicator span:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+        .message .typing-indicator span:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+        @keyframes typing {
+            0%,
+            60%,
+            100% {
+                transform: translateY(0);
+                opacity: 0.4;
+            }
+            30% {
+                transform: translateY(-6px);
+                opacity: 1;
+            }
+        }
 
         @keyframes msgIn {
             0% {
@@ -565,14 +669,24 @@
             }
         }
 
+        .date-divider {
+            text-align: center;
+            color: #8696a0;
+            font-size: 12px;
+            padding: 8px 0;
+            font-weight: 500;
+            letter-spacing: 0.3px;
+        }
+
         /* ----- INPUT AREA ----- */
         .input-area {
-            padding: 8px 16px 12px;
+            padding: 6px 12px 10px;
             border-top: 1px solid #1f2c33;
             background: #1f2c33;
             display: flex;
             align-items: flex-end;
-            gap: 8px;
+            gap: 6px;
+            flex-shrink: 0;
         }
         .input-area .input-wrap {
             flex: 1;
@@ -580,7 +694,7 @@
             align-items: flex-end;
             background: #0b141a;
             border-radius: 20px;
-            padding: 4px 6px 4px 16px;
+            padding: 4px 6px 4px 14px;
             border: 1px solid #2a3942;
             transition: border 0.2s;
         }
@@ -609,7 +723,7 @@
             color: #4a5568;
             font-size: 20px;
             cursor: pointer;
-            padding: 4px 6px;
+            padding: 4px 4px;
             transition: color 0.2s;
         }
         .input-area .input-wrap .emoji-btn:hover {
@@ -619,8 +733,8 @@
             background: transparent;
             border: none;
             color: #aebac1;
-            width: 40px;
-            height: 40px;
+            width: 38px;
+            height: 38px;
             border-radius: 50%;
             cursor: pointer;
             font-size: 18px;
@@ -665,8 +779,8 @@
             position: absolute;
             inset: 0;
             z-index: 200;
-            background: rgba(0, 0, 0, 0.94);
-            backdrop-filter: blur(24px);
+            background: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(28px);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -729,14 +843,16 @@
             flex-direction: column;
             align-items: center;
             gap: 12px;
+            text-align: center;
         }
         .call-videos .remote-wrap .placeholder i {
-            font-size: 64px;
+            font-size: 72px;
             color: #2a3942;
         }
         .call-videos .remote-wrap .placeholder .name {
-            font-size: 22px;
+            font-size: 24px;
             color: #e8edf5;
+            font-weight: 600;
         }
         .call-videos .remote-wrap .placeholder .status {
             font-size: 14px;
@@ -768,7 +884,7 @@
             background: #1f2c33;
         }
         .call-videos .local-wrap.voice-only i {
-            font-size: 40px;
+            font-size: 44px;
             color: #25d366;
         }
 
@@ -828,8 +944,8 @@
             position: absolute;
             inset: 0;
             z-index: 150;
-            background: rgba(0, 0, 0, 0.8);
-            backdrop-filter: blur(16px);
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(18px);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -849,7 +965,8 @@
             border-radius: 28px;
             text-align: center;
             border: 1px solid #2a3942;
-            max-width: 360px;
+            max-width: 380px;
+            width: 100%;
         }
         #incomingCall .card .avatar {
             width: 80px;
@@ -914,13 +1031,13 @@
             background: #b91c1c;
         }
 
-        /* ----- PROFILE / STATUS MODAL ----- */
+        /* ----- PROFILE MODAL ----- */
         .modal-overlay {
             position: absolute;
             inset: 0;
             z-index: 180;
-            background: rgba(0, 0, 0, 0.7);
-            backdrop-filter: blur(12px);
+            background: rgba(0, 0, 0, 0.75);
+            backdrop-filter: blur(14px);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -938,7 +1055,7 @@
             padding: 32px 36px;
             border-radius: 28px;
             border: 1px solid #2a3942;
-            max-width: 420px;
+            max-width: 440px;
             width: 100%;
             margin: 16px;
             max-height: 90vh;
@@ -991,6 +1108,7 @@
             transition: opacity 0.2s;
             color: #fff;
             font-size: 14px;
+            border-radius: 50%;
         }
         .modal-box .avatar-upload .preview:hover .overlay {
             opacity: 1;
@@ -1006,7 +1124,8 @@
             margin-bottom: 4px;
         }
         .modal-box input,
-        .modal-box textarea {
+        .modal-box textarea,
+        .modal-box select {
             width: 100%;
             padding: 10px 14px;
             border-radius: 12px;
@@ -1019,17 +1138,22 @@
             font-family: 'Inter', sans-serif;
         }
         .modal-box input:focus,
-        .modal-box textarea:focus {
+        .modal-box textarea:focus,
+        .modal-box select:focus {
             border-color: #25d366;
         }
         .modal-box textarea {
             resize: vertical;
             min-height: 60px;
         }
+        .modal-box select {
+            appearance: auto;
+        }
         .modal-box .btn-row {
             display: flex;
             gap: 10px;
             justify-content: flex-end;
+            margin-top: 4px;
         }
         .modal-box .btn-row button {
             padding: 10px 24px;
@@ -1053,6 +1177,7 @@
         }
         .modal-box .btn-row .btn-secondary:hover {
             background: #3a4a52;
+            color: #e8edf5;
         }
 
         /* ----- STATUS VIEW ----- */
@@ -1075,7 +1200,7 @@
             visibility: visible;
         }
         .status-view .content {
-            max-width: 420px;
+            max-width: 440px;
             width: 100%;
             padding: 24px;
             text-align: center;
@@ -1109,15 +1234,18 @@
         }
         .status-view .content .status-text {
             font-size: 18px;
-            padding: 20px;
+            padding: 24px;
             background: #1f2c33;
             border-radius: 16px;
             margin-bottom: 12px;
+            word-wrap: break-word;
         }
         .status-view .content .status-image {
             max-width: 100%;
             border-radius: 16px;
             margin-bottom: 12px;
+            max-height: 400px;
+            object-fit: contain;
         }
         .status-view .content .close-btn {
             background: #2a3942;
@@ -1128,6 +1256,7 @@
             font-size: 14px;
             cursor: pointer;
             margin-top: 8px;
+            transition: background 0.15s;
         }
         .status-view .content .close-btn:hover {
             background: #3a4a52;
@@ -1157,12 +1286,12 @@
                 border-radius: 0;
             }
             .sidebar {
-                width: 240px;
-                min-width: 240px;
+                width: 260px;
+                min-width: 260px;
             }
         }
 
-        @media (max-width: 600px) {
+        @media (max-width: 640px) {
             .sidebar {
                 width: 72px;
                 min-width: 72px;
@@ -1181,6 +1310,9 @@
             .sidebar-tabs button {
                 font-size: 10px;
                 padding: 6px 0;
+            }
+            .sidebar-tabs button i {
+                font-size: 14px;
             }
             .search-box {
                 display: none;
@@ -1227,7 +1359,7 @@
                 margin: 16px;
             }
             .input-area {
-                padding: 6px 10px 10px;
+                padding: 6px 8px 10px;
                 gap: 4px;
             }
             .input-area .action-btn {
@@ -1253,10 +1385,46 @@
         .hidden {
             display: none !important;
         }
+
+        /* Toast notifications */
+        .toast-container {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 999;
+            background: #1f2c33;
+            color: #e8edf5;
+            padding: 12px 24px;
+            border-radius: 12px;
+            border: 1px solid #2a3942;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
+            font-size: 14px;
+            opacity: 0;
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            transform: translateX(-50%) translateY(20px);
+            pointer-events: none;
+            max-width: 90%;
+            text-align: center;
+        }
+        .toast-container.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+            pointer-events: auto;
+        }
+        .toast-container.error {
+            border-color: #dc2626;
+        }
+        .toast-container.success {
+            border-color: #25d366;
+        }
     </style>
 </head>
 
 <body>
+
+    <!-- ====== TOAST ====== -->
+    <div class="toast-container" id="toast"></div>
 
     <!-- ====== APP ====== -->
     <div id="app">
@@ -1304,10 +1472,13 @@
                     <button class="active" data-tab="chats"><i class="fas fa-comment"></i> Chats</button>
                     <button data-tab="calls"><i class="fas fa-phone"></i> Calls</button>
                     <button data-tab="statuses"><i class="fas fa-circle"></i> Status</button>
+                    <button data-tab="search"><i class="fas fa-search"></i> Find</button>
                 </div>
 
-                <div class="search-box">
-                    <input type="text" id="searchInput" placeholder="Search or start new chat" />
+                <div class="search-box" id="searchBox">
+                    <span class="search-icon"><i class="fas fa-search"></i></span>
+                    <input type="text" id="searchInput" placeholder="Search users or chats..." />
+                    <span class="search-clear" id="searchClear"><i class="fas fa-times-circle"></i></span>
                 </div>
 
                 <div class="user-list-container">
@@ -1333,8 +1504,9 @@
 
                 <div class="messages-container" id="messagesContainer">
                     <div class="empty-state">
-                        <i class="fas fa-comment-dots"></i>
+                        <i class="fas fa-comment-dots big-icon"></i>
                         <p>Select a friend to start chatting</p>
+                        <p style="font-size:13px;color:#4a5568;">Or use the <strong>Find</strong> tab to discover users</p>
                     </div>
                 </div>
 
@@ -1428,7 +1600,7 @@
             <div class="modal-box">
                 <h2><i class="fas fa-circle"></i> New Status</h2>
                 <label>Type</label>
-                <select id="statusTypeSelect" style="width:100%;padding:10px 14px;border-radius:12px;border:1px solid #2a3942;background:#0b141a;color:#e8edf5;margin-bottom:12px;outline:none;">
+                <select id="statusTypeSelect">
                     <option value="text">Text</option>
                     <option value="photo">Photo</option>
                 </select>
@@ -1454,14 +1626,14 @@
 
     <script>
         // ============================================================
-        //  FRIENDVERSE — WhatsApp-style Full Demo
-        //  Multi-tab communication via BroadcastChannel + WebRTC
-        //  Features: Auth, Chat, Voice/Video Calls, Profile, Status, Call History
+        //  FRIENDVERSE — Advanced WhatsApp-style Demo
+        //  Full-featured: Search, Chat, Voice/Video Calls, Profile, Status
+        //  Multi-tab via BroadcastChannel + WebRTC
         // ============================================================
 
         // ----- DOM refs -----
-        const $ = (s) => document.querySelector(s);
-        const $$ = (s) => document.querySelectorAll(s);
+        const $ = s => document.querySelector(s);
+        const $$ = s => document.querySelectorAll(s);
 
         const loginScreen = $('#loginScreen');
         const loginForm = $('#loginForm');
@@ -1480,6 +1652,8 @@
         const fileInput = $('#fileInput');
         const emojiBtn = $('#emojiBtn');
         const searchInput = $('#searchInput');
+        const searchClear = $('#searchClear');
+        const searchBox = $('#searchBox');
 
         const myName = $('#myName');
         const myStatus = $('#myStatus');
@@ -1490,7 +1664,6 @@
         const chatPartnerName = $('#chatPartnerName');
         const chatPartnerStatus = $('#chatPartnerStatus');
         const chatAvatar = $('#chatAvatar');
-        const chatWith = $('#chatWith');
 
         const voiceCallBtn = $('#voiceCallBtn');
         const videoCallBtn = $('#videoCallBtn');
@@ -1499,7 +1672,6 @@
         const localVideo = $('#localVideo');
         const remoteVideo = $('#remoteVideo');
         const localWrap = $('#localWrap');
-        const remoteWrap = $('#remoteWrap');
         const remotePlaceholder = $('#remotePlaceholder');
         const remoteName = $('#remoteName');
         const remoteStatus = $('#remoteStatus');
@@ -1546,18 +1718,20 @@
 
         const logoutBtn = $('#logoutBtn');
         const tabButtons = $$('.sidebar-tabs button');
-        const searchInputEl = $('#searchInput');
+        const toast = $('#toast');
 
         // ----- State -----
         let currentUser = '';
         let currentPartner = '';
         let allUsers = [];
         let onlineUsers = new Set();
-        let messages = {}; // { partner: [msg] }
-        let callHistory = {}; // { partner: [call] }
-        let statuses = {}; // { username: { text, photo, timestamp } }
-        let userProfiles = {}; // { username: { name, photo, status } }
+        let messages = {};
+        let callHistory = {};
+        let statuses = {};
+        let userProfiles = {};
         let unread = {};
+        let typingTimeout = null;
+        let isTyping = false;
 
         // Voice recording
         let mediaRecorder = null;
@@ -1571,13 +1745,28 @@
         let isCallActive = false;
         let isCallInitiator = false;
         let callPartner = '';
-        let callType = 'voice'; // 'voice' | 'video'
+        let callType = 'voice';
         let callStartTime = null;
         let callTimerInterval = null;
         let pendingOffer = null;
 
-        // BroadcastChannel for cross-tab communication
+        // BroadcastChannel
         let channel = null;
+
+        // All registered users (from localStorage)
+        let registeredUsers = new Set();
+
+        // ----- Toast -----
+        let toastTimeout = null;
+
+        function showToast(msg, type = 'info', duration = 3500) {
+            toast.textContent = msg;
+            toast.className = 'toast-container show ' + type;
+            if (toastTimeout) clearTimeout(toastTimeout);
+            toastTimeout = setTimeout(() => {
+                toast.classList.remove('show');
+            }, duration);
+        }
 
         // ----- Helpers -----
         function getAvatarColor(name) {
@@ -1595,43 +1784,26 @@
             const d = new Date(ts);
             const now = new Date();
             if (d.toDateString() === now.toDateString()) return 'Today';
-            const yesterday = new Date(now);
-            yesterday.setDate(yesterday.getDate() - 1);
-            if (d.toDateString() === yesterday.toDateString()) return 'Yesterday';
+            const y = new Date(now);
+            y.setDate(y.getDate() - 1);
+            if (d.toDateString() === y.toDateString()) return 'Yesterday';
             return d.toLocaleDateString();
         }
 
         function formatDuration(ms) {
-            const totalSec = Math.floor(ms / 1000);
-            const min = String(Math.floor(totalSec / 60)).padStart(2, '0');
-            const sec = String(totalSec % 60).padStart(2, '0');
-            return `${min}:${sec}`;
+            const s = Math.floor(ms / 1000);
+            const m = String(Math.floor(s / 60)).padStart(2, '0');
+            const sec = String(s % 60).padStart(2, '0');
+            return `${m}:${sec}`;
         }
 
-        function getInitials(name) {
-            return name.charAt(0).toUpperCase();
-        }
+        function getInitials(name) { return name.charAt(0).toUpperCase(); }
 
-        function getDisplayName(user) {
-            return userProfiles[user]?.name || user;
-        }
+        function getDisplayName(user) { return userProfiles[user]?.name || user; }
 
-        function getUserPhoto(user) {
-            return userProfiles[user]?.photo || null;
-        }
+        function getUserPhoto(user) { return userProfiles[user]?.photo || null; }
 
-        function getUserStatus(user) {
-            return userProfiles[user]?.status || 'Hey there!';
-        }
-
-        function getAvatarHTML(user, size = 40) {
-            const photo = getUserPhoto(user);
-            const color = getAvatarColor(user);
-            if (photo) {
-                return `<img src="${photo}" style="width:${size}px;height:${size}px;object-fit:cover;" />`;
-            }
-            return `<span style="background:${color};width:${size}px;height:${size}px;display:flex;align-items:center;justify-content:center;border-radius:50%;font-weight:700;font-size:${size*0.4}px;">${getInitials(user)}</span>`;
-        }
+        function getUserStatusText(user) { return userProfiles[user]?.status || 'Hey there!'; }
 
         function escapeHtml(text) {
             const d = document.createElement('div');
@@ -1643,26 +1815,19 @@
             messagesContainer.scrollTop = messagesContainer.scrollHeight;
         }
 
-        function getOnlineStatus(user) {
-            return onlineUsers.has(user) ? 'online' : 'offline';
-        }
+        function isUserOnline(user) { return onlineUsers.has(user); }
 
-        function isUserOnline(user) {
-            return onlineUsers.has(user);
+        function getActiveTab() {
+            const btn = document.querySelector('.sidebar-tabs button.active');
+            return btn ? btn.dataset.tab : 'chats';
         }
 
         // ----- Data persistence -----
         function saveData() {
             try {
-                const data = {
-                    messages,
-                    callHistory,
-                    statuses,
-                    userProfiles,
-                    unread
-                };
+                const data = { messages, callHistory, statuses, userProfiles, unread };
                 localStorage.setItem('friendverse_' + currentUser, JSON.stringify(data));
-            } catch (e) {}
+            } catch (e) { console.warn('Save error:', e); }
         }
 
         function loadData() {
@@ -1676,11 +1841,10 @@
                     userProfiles = data.userProfiles || {};
                     unread = data.unread || {};
                 }
-            } catch (e) {}
+            } catch (e) { console.warn('Load error:', e); }
         }
 
         function loadAllProfiles() {
-            // Load profiles from all users
             try {
                 const keys = Object.keys(localStorage).filter(k => k.startsWith('friendverse_'));
                 for (const key of keys) {
@@ -1691,7 +1855,6 @@
                         if (data.userProfiles && data.userProfiles[user]) {
                             userProfiles[user] = data.userProfiles[user];
                         }
-                        // Also load statuses
                         if (data.statuses) {
                             for (const [u, s] of Object.entries(data.statuses)) {
                                 if (!statuses[u] || statuses[u].timestamp < s.timestamp) {
@@ -1699,6 +1862,19 @@
                                 }
                             }
                         }
+                        registeredUsers.add(user);
+                    }
+                }
+            } catch (e) { console.warn('Load profiles error:', e); }
+        }
+
+        function loadRegisteredUsers() {
+            try {
+                const keys = Object.keys(localStorage).filter(k => k.startsWith('friendverse_'));
+                for (const key of keys) {
+                    const user = key.replace('friendverse_', '');
+                    if (user && user !== currentUser) {
+                        registeredUsers.add(user);
                     }
                 }
             } catch (e) {}
@@ -1714,7 +1890,7 @@
                     handleChannelMessage(data);
                 };
             } catch (e) {
-                console.warn('BroadcastChannel not supported, using fallback');
+                console.warn('BroadcastChannel not supported');
             }
         }
 
@@ -1756,6 +1932,16 @@
                 case 'call_log':
                     handleIncomingCallLog(data.call);
                     break;
+                case 'typing_start':
+                    if (from === currentPartner) {
+                        showTypingIndicator(true);
+                    }
+                    break;
+                case 'typing_stop':
+                    if (from === currentPartner) {
+                        showTypingIndicator(false);
+                    }
+                    break;
                 case 'webrtc_offer':
                     handleWebRTCOffer(data);
                     break;
@@ -1775,16 +1961,16 @@
                     handleWebRTCBusy(data);
                     break;
                 case 'ping':
-                    // Respond to ping
                     broadcast({ type: 'pong', from: currentUser });
                     break;
                 case 'pong':
-                    // Someone responded to ping
+                    break;
+                default:
                     break;
             }
         }
 
-        // ----- Online status heartbeat -----
+        // ----- Online status -----
         function sendOnlineStatus() {
             broadcast({ type: 'online', from: currentUser });
         }
@@ -1796,37 +1982,49 @@
         // ----- Render user list -----
         function renderUsers() {
             const searchTerm = searchInput.value.toLowerCase().trim();
-            const activeTab = document.querySelector('.sidebar-tabs button.active')?.dataset.tab || 'chats';
+            const activeTab = getActiveTab();
 
             let users = [];
-            if (activeTab === 'chats') {
-                // Show all users who have had messages or are online
+
+            if (activeTab === 'search') {
+                // Show all registered users
+                users = [...registeredUsers].filter(u => u !== currentUser);
+                // Sort by online first
+                users.sort((a, b) => {
+                    const aOn = onlineUsers.has(a);
+                    const bOn = onlineUsers.has(b);
+                    if (aOn && !bOn) return -1;
+                    if (!aOn && bOn) return 1;
+                    return a.localeCompare(b);
+                });
+            } else if (activeTab === 'chats') {
                 const all = new Set([...Object.keys(messages), ...onlineUsers]);
                 users = [...all].filter(u => u !== currentUser);
             } else if (activeTab === 'calls') {
-                // Show users with call history
                 users = Object.keys(callHistory).filter(u => u !== currentUser);
             } else if (activeTab === 'statuses') {
-                // Show users with status updates
-                users = Object.keys(statuses).filter(u => u !== currentUser);
+                users = Object.keys(statuses).filter(u => u !== currentUser && statuses[u].timestamp > Date.now() - 24 * 60 *
+                    60 * 1000);
             }
 
-            // Sort: online first, then by last message time
+            // Filter by search
+            if (searchTerm && activeTab !== 'search') {
+                users = users.filter(u =>
+                    getDisplayName(u).toLowerCase().includes(searchTerm) ||
+                    u.toLowerCase().includes(searchTerm)
+                );
+            }
+
+            // Sort: online first, then by last message
             users.sort((a, b) => {
-                const aOnline = onlineUsers.has(a);
-                const bOnline = onlineUsers.has(b);
-                if (aOnline && !bOnline) return -1;
-                if (!aOnline && bOnline) return 1;
+                const aOn = onlineUsers.has(a);
+                const bOn = onlineUsers.has(b);
+                if (aOn && !bOn) return -1;
+                if (!aOn && bOn) return 1;
                 const aLast = messages[a]?.[messages[a].length - 1]?.timestamp || 0;
                 const bLast = messages[b]?.[messages[b].length - 1]?.timestamp || 0;
                 return bLast - aLast;
             });
-
-            // Filter by search
-            if (searchTerm) {
-                users = users.filter(u => getDisplayName(u).toLowerCase().includes(searchTerm) || u.toLowerCase().includes(
-                searchTerm));
-            }
 
             let html = '';
             for (const u of users) {
@@ -1834,13 +2032,30 @@
                 const isActive = u === currentPartner;
                 const unreadCount = unread[u] || 0;
                 const lastMsg = messages[u]?.[messages[u].length - 1];
-                const lastMsgText = lastMsg ? (lastMsg.type === 'text' ? lastMsg.content : (lastMsg.type === 'voice' ?
-                    '🎤 Voice' : (lastMsg.type === 'photo' ? '📷 Photo' : (lastMsg.type === 'call' ? '📞 Call' :
-                    '...')))) : '';
+                let lastMsgText = '';
+                if (lastMsg) {
+                    if (lastMsg.type === 'text') lastMsgText = lastMsg.content;
+                    else if (lastMsg.type === 'voice') lastMsgText = '🎤 Voice';
+                    else if (lastMsg.type === 'photo') lastMsgText = '📷 Photo';
+                    else if (lastMsg.type === 'call') lastMsgText = '📞 Call';
+                    else lastMsgText = '...';
+                }
                 const lastMsgTime = lastMsg ? formatTime(lastMsg.timestamp) : '';
                 const displayName = getDisplayName(u);
                 const photo = getUserPhoto(u);
                 const hasStatus = statuses[u] && statuses[u].timestamp > Date.now() - 24 * 60 * 60 * 1000;
+
+                // Highlight search term in name
+                let displayNameHtml = escapeHtml(displayName);
+                if (searchTerm && displayName.toLowerCase().includes(searchTerm)) {
+                    const idx = displayName.toLowerCase().indexOf(searchTerm);
+                    const before = displayName.substring(0, idx);
+                    const match = displayName.substring(idx, idx + searchTerm.length);
+                    const after = displayName.substring(idx + searchTerm.length);
+                    displayNameHtml = escapeHtml(before) +
+                        `<span class="search-highlight">${escapeHtml(match)}</span>` +
+                        escapeHtml(after);
+                }
 
                 html += `
               <div class="user-item ${isActive ? 'active' : ''}" data-user="${u}">
@@ -1849,28 +2064,34 @@
                   <span class="online-dot ${isOnline ? 'online' : ''}"></span>
                 </div>
                 <div class="info">
-                  <div class="name">${escapeHtml(displayName)} ${hasStatus ? '<span style="color:#25d366;font-size:12px;">●</span>' : ''}</div>
-                  <div class="last-msg">${lastMsgText ? (lastMsg.from === currentUser ? 'You: ' : '') + escapeHtml(lastMsgText) : 'Start chatting...'}</div>
+                  <div class="name">${displayNameHtml} ${hasStatus ? '<span class="status-badge">●</span>' : ''}</div>
+                  <div class="last-msg">${lastMsgText ? (lastMsg.from === currentUser ? 'You: ' : '') + escapeHtml(lastMsgText) : (activeTab === 'search' ? (isOnline ? '🟢 Online' : '⚪ Offline') : 'Start chatting...')}</div>
                 </div>
                 <div class="meta">
                   ${lastMsgTime ? `<div class="time">${lastMsgTime}</div>` : ''}
                   ${unreadCount > 0 ? `<div class="unread">${unreadCount}</div>` : ''}
+                  ${activeTab === 'search' && isOnline ? '<div style="color:#25d366;font-size:12px;margin-top:2px;">●</div>' : ''}
                 </div>
               </div>
             `;
             }
 
             if (users.length === 0) {
+                const msgs = {
+                    'chats': 'No chats yet. Start a new conversation!',
+                    'calls': 'No call history.',
+                    'statuses': 'No status updates from friends.',
+                    'search': 'No users found. Invite friends to join!'
+                };
                 html = `<div style="padding:40px 20px;text-align:center;color:#8696a0;font-size:14px;">
-              ${activeTab === 'chats' ? 'No chats yet. Start a new conversation!' : 
-                activeTab === 'calls' ? 'No call history.' : 
-                'No status updates from friends.'}
+              <i class="fas fa-${activeTab === 'search' ? 'users-slash' : activeTab === 'calls' ? 'phone-slash' : activeTab === 'statuses' ? 'circle-slash' : 'comment-slash'}" style="font-size:32px;display:block;margin-bottom:12px;opacity:0.4;"></i>
+              ${msgs[activeTab] || 'Nothing here yet.'}
+              ${activeTab === 'search' ? '<br><span style="font-size:12px;color:#4a5568;">Users appear here after they sign in at least once.</span>' : ''}
             </div>`;
             }
 
             userList.innerHTML = html;
 
-            // Click events
             userList.querySelectorAll('.user-item').forEach(el => {
                 el.addEventListener('click', () => {
                     const user = el.dataset.user;
@@ -1887,10 +2108,15 @@
             currentPartner = partner;
             unread[partner] = 0;
             saveData();
+
+            // Switch to chats tab
+            tabButtons.forEach(b => b.classList.remove('active'));
+            document.querySelector('[data-tab="chats"]').classList.add('active');
+            searchInput.value = '';
+
             renderUsers();
             updateChatHeader();
             renderMessages();
-            // Enable input
             document.getElementById('inputArea').style.display = 'flex';
         }
 
@@ -1900,6 +2126,7 @@
                 chatPartnerStatus.textContent = 'offline';
                 chatPartnerStatus.className = 'status';
                 chatAvatar.innerHTML = '?';
+                chatAvatar.style.background = '#2a3942';
                 return;
             }
             const displayName = getDisplayName(currentPartner);
@@ -1908,9 +2135,13 @@
             chatPartnerStatus.textContent = isOnline ? 'online' : 'offline';
             chatPartnerStatus.className = 'status' + (isOnline ? ' online' : '');
             const photo = getUserPhoto(currentPartner);
-            chatAvatar.innerHTML = photo ? `<img src="${photo}" />` : getInitials(currentPartner);
-            chatAvatar.style.background = photo ? 'transparent' : getAvatarColor(currentPartner);
-            // Update call buttons
+            if (photo) {
+                chatAvatar.innerHTML = `<img src="${photo}" />`;
+                chatAvatar.style.background = 'transparent';
+            } else {
+                chatAvatar.innerHTML = getInitials(currentPartner);
+                chatAvatar.style.background = getAvatarColor(currentPartner);
+            }
             voiceCallBtn.style.opacity = isOnline ? '1' : '0.4';
             voiceCallBtn.style.pointerEvents = isOnline ? 'auto' : 'none';
             videoCallBtn.style.opacity = isOnline ? '1' : '0.4';
@@ -1928,12 +2159,39 @@
             videoCallBtn.style.pointerEvents = isOnline ? 'auto' : 'none';
         }
 
+        // ----- Typing indicator -----
+        let typingIndicatorEl = null;
+
+        function showTypingIndicator(show) {
+            if (!currentPartner) return;
+            // Remove existing
+            const existing = messagesContainer.querySelector('.typing-indicator-wrapper');
+            if (existing) existing.remove();
+
+            if (show) {
+                const wrapper = document.createElement('div');
+                wrapper.className = 'typing-indicator-wrapper';
+                wrapper.style.cssText =
+                    'display:flex;align-items:center;gap:8px;padding:4px 0;align-self:flex-start;';
+                wrapper.innerHTML = `
+              <span style="font-size:12px;color:#8696a0;">${getDisplayName(currentPartner)} is typing</span>
+              <div class="typing-indicator">
+                <span></span><span></span><span></span>
+              </div>
+            `;
+                messagesContainer.appendChild(wrapper);
+                scrollToBottom();
+            }
+        }
+
+        // ----- Render messages -----
         function renderMessages() {
             if (!currentPartner) {
                 messagesContainer.innerHTML = `
               <div class="empty-state">
-                <i class="fas fa-comment-dots"></i>
+                <i class="fas fa-comment-dots big-icon"></i>
                 <p>Select a friend to start chatting</p>
+                <p style="font-size:13px;color:#4a5568;">Or use the <strong>Find</strong> tab to discover users</p>
               </div>
             `;
                 return;
@@ -1943,8 +2201,9 @@
             if (msgs.length === 0) {
                 messagesContainer.innerHTML = `
               <div class="empty-state">
-                <i class="fas fa-comment-dots"></i>
+                <i class="fas fa-comment-dots big-icon" style="font-size:48px;"></i>
                 <p>Say hello to ${getDisplayName(currentPartner)} 👋</p>
+                <p style="font-size:13px;color:#4a5568;">Start the conversation with a message</p>
               </div>
             `;
                 return;
@@ -1955,7 +2214,7 @@
             for (const m of msgs) {
                 const date = formatDate(m.timestamp);
                 if (date !== lastDate) {
-                    html += `<div style="text-align:center;color:#8696a0;font-size:12px;padding:8px 0;font-weight:500;">${date}</div>`;
+                    html += `<div class="date-divider">${date}</div>`;
                     lastDate = date;
                 }
                 html += renderMessageHTML(m);
@@ -1967,8 +2226,8 @@
         function renderMessageHTML(m) {
             const isSent = m.from === currentUser;
             const time = formatTime(m.timestamp);
-
             let contentHtml = '';
+
             if (m.type === 'text') {
                 contentHtml = `<div>${escapeHtml(m.content)}</div>`;
             } else if (m.type === 'voice') {
@@ -1998,7 +2257,7 @@
             return `
             <div class="message ${isSent ? 'sent' : 'received'}">
               ${contentHtml}
-              <span class="time">${time}</span>
+              <span class="time">${time} ${isSent ? '✓' : ''}</span>
             </div>
           `;
         }
@@ -2025,15 +2284,23 @@
             renderUsers();
         }
 
-        // ----- Handle incoming message from channel -----
         function handleIncomingMessage(msg) {
             addMessage(msg);
-            // If this is a reply, maybe auto-reply?
+            // If the message is from our current partner and we're in the chat, clear typing
+            if (msg.from === currentPartner) {
+                showTypingIndicator(false);
+            }
         }
 
         // ----- Send message -----
         function sendTextMessage(text) {
             if (!currentPartner || !text.trim()) return;
+            // Stop typing
+            if (isTyping) {
+                clearTimeout(typingTimeout);
+                isTyping = false;
+                broadcast({ type: 'typing_stop', from: currentUser, to: currentPartner });
+            }
             const msg = {
                 id: Date.now() + '-' + Math.random().toString(36).slice(2, 6),
                 from: currentUser,
@@ -2077,7 +2344,6 @@
             callHistory[partner].push(entry);
             saveData();
 
-            // Also add as message
             const msg = {
                 id: entry.id,
                 from: currentUser,
@@ -2100,7 +2366,6 @@
             if (!exists) {
                 callHistory[target].push(call);
                 saveData();
-                // Add as message
                 const msg = {
                     id: call.id,
                     from: call.from,
@@ -2151,9 +2416,9 @@
                 isRecording = true;
                 recordBtn.classList.add('recording');
                 recordBtn.innerHTML = '<i class="fas fa-stop"></i>';
+                showToast('Recording... tap again to send', 'info', 2000);
             } catch (err) {
-                console.error('Record error:', err);
-                alert('Could not access microphone.');
+                showToast('Could not access microphone', 'error');
             }
         }
 
@@ -2180,7 +2445,7 @@
             const file = e.target.files[0];
             if (!file) return;
             if (!file.type.startsWith('image/')) {
-                alert('Please select an image.');
+                showToast('Please select an image', 'error');
                 fileInput.value = '';
                 return;
             }
@@ -2189,6 +2454,7 @@
                 const dataUrl = ev.target.result;
                 sendMedia('photo', dataUrl);
                 fileInput.value = '';
+                showToast('Photo sent!', 'success');
             };
             reader.readAsDataURL(file);
         });
@@ -2197,14 +2463,14 @@
         //  EMOJI
         // ============================================================
         emojiBtn.addEventListener('click', () => {
-            const emojis = ['😊', '😂', '❤️', '🔥', '👍', '👋', '😍', '🤩', '😎', '💯', '🎉', '✨', '🌟', '💪', '🙌', '🤗', '😘', '🥰',
-                '😁', '🤣'
+            const emojis = ['😊', '😂', '❤️', '🔥', '👍', '👋', '😍', '🤩', '😎', '💯', '🎉', '✨', '🌟', '💪', '🙌', '🤗', '😘',
+                '🥰', '😁', '🤣', '😅', '😆', '😉', '🥳', '🤔', '😴'
             ];
             const picker = document.createElement('div');
             picker.style.cssText = `
             position:fixed; bottom:80px; left:20px; background:#1f2c33; 
             border-radius:16px; padding:12px; display:flex; flex-wrap:wrap; gap:4px;
-            max-width:260px; border:1px solid #2a3942; z-index:250;
+            max-width:280px; border:1px solid #2a3942; z-index:250;
             box-shadow:0 12px 40px rgba(0,0,0,0.6);
           `;
             emojis.forEach(e => {
@@ -2230,6 +2496,30 @@
                     }
                 });
             }, 10);
+        });
+
+        // ============================================================
+        //  TYPING DETECTION
+        // ============================================================
+        msgInput.addEventListener('input', () => {
+            if (!currentPartner) return;
+            const text = msgInput.value;
+            if (text.length > 0 && !isTyping) {
+                isTyping = true;
+                broadcast({ type: 'typing_start', from: currentUser, to: currentPartner });
+            }
+            if (text.length === 0 && isTyping) {
+                isTyping = false;
+                clearTimeout(typingTimeout);
+                broadcast({ type: 'typing_stop', from: currentUser, to: currentPartner });
+            }
+            clearTimeout(typingTimeout);
+            typingTimeout = setTimeout(() => {
+                if (isTyping) {
+                    isTyping = false;
+                    broadcast({ type: 'typing_stop', from: currentUser, to: currentPartner });
+                }
+            }, 3000);
         });
 
         // ============================================================
@@ -2264,10 +2554,7 @@
 
         async function getLocalStream(video = true) {
             try {
-                const constraints = {
-                    audio: true,
-                    video: video ? { facingMode: 'user' } : false
-                };
+                const constraints = { audio: true, video: video ? { facingMode: 'user' } : false };
                 localStream = await navigator.mediaDevices.getUserMedia(constraints);
                 localVideo.srcObject = localStream;
                 if (!video) {
@@ -2282,8 +2569,7 @@
                 }
                 return true;
             } catch (err) {
-                console.error('Media error:', err);
-                alert('Could not access camera/mic. Please allow permissions.');
+                showToast('Could not access camera/mic', 'error');
                 return false;
             }
         }
@@ -2318,9 +2604,8 @@
                 if (e.streams && e.streams[0]) {
                     remoteVideo.srcObject = e.streams[0];
                     remoteVideo.style.display = 'block';
-                    const ph = remotePlaceholder;
-                    ph.querySelector('.status').textContent = 'Connected';
-                    ph.querySelector('.name').textContent = getDisplayName(callPartner);
+                    remotePlaceholder.querySelector('.status').textContent = 'Connected';
+                    remotePlaceholder.querySelector('.name').textContent = getDisplayName(callPartner);
                 }
             };
 
@@ -2356,11 +2641,11 @@
         // ----- Initiate call -----
         async function initiateCall(partner, video = true) {
             if (isCallActive) {
-                alert('You are already on a call.');
+                showToast('Already on a call', 'error');
                 return;
             }
             if (!onlineUsers.has(partner)) {
-                alert('User is offline.');
+                showToast('User is offline', 'error');
                 return;
             }
 
@@ -2389,7 +2674,6 @@
                     video: video
                 });
 
-                // Show call overlay
                 callOverlay.classList.add('active');
                 remoteName.textContent = getDisplayName(partner);
                 remoteStatus.textContent = 'Calling...';
@@ -2398,20 +2682,17 @@
                 remotePlaceholder.querySelector('.name').textContent = getDisplayName(partner);
                 isCallActive = true;
 
-                // Set call buttons
                 voiceCallBtn.classList.add('active-call');
                 videoCallBtn.classList.add('active-call');
                 voiceCallBtn.innerHTML = '<i class="fas fa-phone-slash"></i>';
                 videoCallBtn.innerHTML = '<i class="fas fa-phone-slash"></i>';
 
-                // Update controls
                 updateCallControls();
 
-                // Timeout if no answer
                 setTimeout(() => {
                     if (isCallActive && isCallInitiator && peerConnection?.connectionState === 'new') {
                         endCall();
-                        alert('No answer from ' + getDisplayName(partner));
+                        showToast('No answer from ' + getDisplayName(partner), 'error');
                     }
                 }, 30000);
 
@@ -2433,7 +2714,6 @@
             callPartner = data.from;
             callType = data.video ? 'video' : 'voice';
 
-            // Show incoming call UI
             callerName.textContent = getDisplayName(data.from);
             callerType.textContent = data.video ? 'Video call...' : 'Voice call...';
             const photo = getUserPhoto(data.from);
@@ -2441,7 +2721,6 @@
             callerAvatar.style.background = photo ? 'transparent' : getAvatarColor(data.from);
             incomingCall.classList.add('active');
 
-            // Accept
             acceptCallBtn.onclick = async () => {
                 incomingCall.classList.remove('active');
                 const ok = await getLocalStream(data.video);
@@ -2498,7 +2777,6 @@
                 pendingOffer = null;
             };
 
-            // Auto-reject after 25s
             setTimeout(() => {
                 if (incomingCall.classList.contains('active')) {
                     incomingCall.classList.remove('active');
@@ -2509,19 +2787,15 @@
             }, 25000);
         }
 
-        // ----- Handle answer -----
         async function handleWebRTCAnswer(data) {
             if (data.from !== callPartner || !isCallInitiator) return;
             try {
                 await peerConnection.setRemoteDescription(new RTCSessionDescription(data.answer));
                 remoteStatus.textContent = 'Connected';
                 startCallTimer();
-            } catch (err) {
-                console.error('Answer set error:', err);
-            }
+            } catch (err) { console.error('Answer set error:', err); }
         }
 
-        // ----- Handle ICE -----
         function handleWebRTCIce(data) {
             if (data.from !== callPartner) return;
             if (peerConnection) {
@@ -2531,7 +2805,6 @@
             }
         }
 
-        // ----- Handle end -----
         function handleWebRTCEnd(data) {
             if (data.from === callPartner) {
                 const duration = callStartTime ? Date.now() - callStartTime : 0;
@@ -2540,29 +2813,25 @@
             }
         }
 
-        // ----- Handle reject -----
         function handleWebRTCReject(data) {
             if (data.from === callPartner && isCallInitiator) {
-                alert(getDisplayName(callPartner) + ' declined the call.');
+                showToast(getDisplayName(callPartner) + ' declined the call', 'error');
                 endCall();
             }
         }
 
-        // ----- Handle busy -----
         function handleWebRTCBusy(data) {
             if (data.from === callPartner && isCallInitiator) {
-                alert(getDisplayName(callPartner) + ' is on another call.');
+                showToast(getDisplayName(callPartner) + ' is on another call', 'error');
                 endCall();
             }
         }
 
-        // ----- End call -----
         function endCall() {
             const duration = callStartTime ? Date.now() - callStartTime : 0;
             const hadCall = isCallActive && callPartner;
 
             if (hadCall && !isCallInitiator) {
-                // If we received a call and ended it, log it
                 addCallLog(callPartner, duration, false);
             } else if (hadCall && isCallInitiator && peerConnection?.connectionState === 'connected') {
                 addCallLog(callPartner, duration, false);
@@ -2597,15 +2866,12 @@
             callVideoToggleBtn.classList.remove('video-off');
             callVideoToggleBtn.innerHTML = '<i class="fas fa-video"></i>';
 
-            // Notify others
             if (hadCall && callPartner) {
                 broadcast({ type: 'webrtc_end', from: currentUser, to: callPartner });
             }
-
             pendingOffer = null;
         }
 
-        // ----- Update call controls -----
         function updateCallControls() {
             callMuteBtn.onclick = () => {
                 if (!localStream) return;
@@ -2634,19 +2900,11 @@
 
         // ----- Call buttons -----
         voiceCallBtn.addEventListener('click', () => {
-            if (isCallActive) {
-                endCall();
-            } else if (currentPartner) {
-                initiateCall(currentPartner, false);
-            }
+            if (isCallActive) { endCall(); } else if (currentPartner) { initiateCall(currentPartner, false); }
         });
 
         videoCallBtn.addEventListener('click', () => {
-            if (isCallActive) {
-                endCall();
-            } else if (currentPartner) {
-                initiateCall(currentPartner, true);
-            }
+            if (isCallActive) { endCall(); } else if (currentPartner) { initiateCall(currentPartner, true); }
         });
 
         // ============================================================
@@ -2665,7 +2923,6 @@
                 profilePreviewText.style.display = 'block';
                 profilePreviewText.textContent = getInitials(currentUser);
             }
-            // Update sidebar
             updateSidebarProfile();
         }
 
@@ -2696,6 +2953,7 @@
             renderUsers();
             updateChatHeader();
             profileModal.classList.remove('active');
+            showToast('Profile updated!', 'success');
         }
 
         profileBtn.addEventListener('click', () => {
@@ -2703,21 +2961,16 @@
             profileModal.classList.add('active');
         });
 
-        profileCloseBtn.addEventListener('click', () => {
-            profileModal.classList.remove('active');
-        });
-
+        profileCloseBtn.addEventListener('click', () => profileModal.classList.remove('active'));
         profileSaveBtn.addEventListener('click', saveProfile);
 
-        profilePreview.addEventListener('click', () => {
-            profileFileInput.click();
-        });
+        profilePreview.addEventListener('click', () => profileFileInput.click());
 
         profileFileInput.addEventListener('change', (e) => {
             const file = e.target.files[0];
             if (!file) return;
             if (!file.type.startsWith('image/')) {
-                alert('Please select an image.');
+                showToast('Please select an image', 'error');
                 profileFileInput.value = '';
                 return;
             }
@@ -2754,7 +3007,7 @@
             const file = e.target.files[0];
             if (!file) return;
             if (!file.type.startsWith('image/')) {
-                alert('Please select an image.');
+                showToast('Please select an image', 'error');
                 statusPhotoInput.value = '';
                 return;
             }
@@ -2767,9 +3020,7 @@
             reader.readAsDataURL(file);
         });
 
-        newStatusCloseBtn.addEventListener('click', () => {
-            newStatusModal.classList.remove('active');
-        });
+        newStatusCloseBtn.addEventListener('click', () => newStatusModal.classList.remove('active'));
 
         newStatusPostBtn.addEventListener('click', () => {
             const type = statusTypeSelect.value;
@@ -2778,45 +3029,36 @@
 
             if (type === 'text') {
                 content = statusTextInput.value.trim();
-                if (!content) { alert('Please enter a status.'); return; }
+                if (!content) { showToast('Please enter a status', 'error'); return; }
+                postStatus('text', null, content);
             } else {
                 const file = statusPhotoInput.files[0];
-                if (!file) { alert('Please select a photo.'); return; }
-                // Read the file
+                if (!file) { showToast('Please select a photo', 'error'); return; }
                 const reader = new FileReader();
                 reader.onload = (ev) => {
                     photo = ev.target.result;
                     postStatus('photo', photo, '');
                 };
                 reader.readAsDataURL(file);
-                return;
             }
-
-            postStatus('text', null, content);
         });
 
         function postStatus(type, photo, text) {
-            const status = {
-                type: type,
-                text: text || '',
-                photo: photo || null,
-                timestamp: Date.now()
-            };
+            const status = { type, text: text || '', photo: photo || null, timestamp: Date.now() };
             statuses[currentUser] = status;
             saveData();
             broadcast({ type: 'status_update', from: currentUser, status });
             newStatusModal.classList.remove('active');
             renderUsers();
-            // Show own status
             showStatus(currentUser);
+            showToast('Status posted!', 'success');
         }
 
-        // View status
         function showStatus(user) {
             const s = statuses[user];
             if (!s) return;
             if (s.timestamp < Date.now() - 24 * 60 * 60 * 1000) {
-                alert('Status expired.');
+                showToast('Status expired', 'error');
                 return;
             }
 
@@ -2835,18 +3077,15 @@
             statusView.classList.add('active');
         }
 
-        statusCloseBtn.addEventListener('click', () => {
-            statusView.classList.remove('active');
-        });
+        statusCloseBtn.addEventListener('click', () => statusView.classList.remove('active'));
 
-        // Click on user's status indicator in chat list
+        // Click on user to view status
         document.addEventListener('click', (e) => {
             const item = e.target.closest('.user-item');
             if (item) {
                 const user = item.dataset.user;
                 if (user && statuses[user] && statuses[user].timestamp > Date.now() - 24 * 60 * 60 * 1000) {
-                    // If clicked on the status indicator area
-                    if (e.target.closest('.avatar') || e.target.closest('.name')) {
+                    if (e.target.closest('.avatar') || e.target.closest('.name') || e.target.closest('.status-badge')) {
                         showStatus(user);
                     }
                 }
@@ -2860,6 +3099,18 @@
             btn.addEventListener('click', () => {
                 tabButtons.forEach(b => b.classList.remove('active'));
                 btn.classList.add('active');
+                // Show/hide search box based on tab
+                const tab = btn.dataset.tab;
+                searchBox.style.display = (tab === 'search' || tab === 'chats') ? 'block' : 'none';
+                if (tab === 'search') {
+                    searchInput.placeholder = 'Search for users...';
+                    // Load all registered users
+                    loadRegisteredUsers();
+                } else if (tab === 'chats') {
+                    searchInput.placeholder = 'Search chats...';
+                } else {
+                    searchInput.placeholder = 'Search...';
+                }
                 renderUsers();
             });
         });
@@ -2867,7 +3118,17 @@
         // ============================================================
         //  SEARCH
         // ============================================================
-        searchInput.addEventListener('input', renderUsers);
+        searchInput.addEventListener('input', () => {
+            const val = searchInput.value;
+            searchClear.classList.toggle('visible', val.length > 0);
+            renderUsers();
+        });
+
+        searchClear.addEventListener('click', () => {
+            searchInput.value = '';
+            searchClear.classList.remove('visible');
+            renderUsers();
+        });
 
         // ============================================================
         //  LOGOUT
@@ -2877,16 +3138,13 @@
             sendOfflineStatus();
             currentUser = '';
             currentPartner = '';
-            localStorage.removeItem('friendverse_' + currentUser);
             mainApp.classList.remove('visible');
             loginScreen.classList.remove('hidden');
             usernameInput.value = '';
             passwordInput.value = '';
             usernameInput.focus();
-            if (channel) {
-                try { channel.close(); } catch (e) {}
-                channel = null;
-            }
+            if (channel) { try { channel.close(); } catch (e) {} channel = null; }
+            showToast('Logged out', 'info');
         });
 
         // ============================================================
@@ -2917,44 +3175,30 @@
             loginBtn.disabled = true;
             loginBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Signing in...';
 
-            // Simulate login
             setTimeout(() => {
                 currentUser = username;
                 loginBtn.disabled = false;
                 loginBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Sign In';
 
-                // Init channel
-                initChannel();
+                // Register this user
+                registeredUsers.add(username);
 
-                // Load data
+                initChannel();
                 loadData();
                 loadAllProfiles();
 
-                // Set default profile
                 if (!userProfiles[currentUser]) {
-                    userProfiles[currentUser] = {
-                        name: currentUser,
-                        status: 'Hey there!',
-                        photo: null
-                    };
+                    userProfiles[currentUser] = { name: currentUser, status: 'Hey there!', photo: null };
                     saveData();
                 }
 
-                // Load statuses from others
-                loadAllProfiles();
-
-                // Update UI
                 updateSidebarProfile();
                 loginScreen.classList.add('hidden');
                 mainApp.classList.add('visible');
 
-                // Broadcast online
                 sendOnlineStatus();
-
-                // Ping other tabs to update their lists
                 broadcast({ type: 'ping', from: currentUser });
 
-                // Render
                 renderUsers();
                 updateChatHeader();
 
@@ -2963,31 +3207,25 @@
                 if (chatKeys.length > 0) {
                     switchChat(chatKeys[0]);
                 } else {
-                    // Show empty state
                     messagesContainer.innerHTML = `
                 <div class="empty-state">
-                  <i class="fas fa-comment-dots"></i>
+                  <i class="fas fa-comment-dots big-icon"></i>
                   <p>Select a friend to start chatting</p>
+                  <p style="font-size:13px;color:#4a5568;">Use the <strong>Find</strong> tab to discover users</p>
                 </div>
               `;
                     document.getElementById('inputArea').style.display = 'flex';
                 }
 
-                // Periodic online ping
-                setInterval(() => {
-                    if (currentUser) {
-                        sendOnlineStatus();
-                    }
-                }, 30000);
+                setInterval(() => { if (currentUser) sendOnlineStatus(); }, 30000);
 
-                // Auto-logout on tab close
                 window.addEventListener('beforeunload', () => {
-                    if (currentUser) {
-                        sendOfflineStatus();
-                    }
+                    if (currentUser) sendOfflineStatus();
                 });
 
-            }, 800);
+                showToast('Welcome, ' + getDisplayName(currentUser) + '! 🎉', 'success', 3000);
+
+            }, 600);
         });
 
         // ============================================================
@@ -2996,11 +3234,12 @@
         msgInput.style.height = 'auto';
         usernameInput.focus();
 
-        console.log('🚀 FriendVerse — WhatsApp-style Demo');
+        console.log('🚀 FriendVerse — Advanced WhatsApp-style Demo');
         console.log('📌 Open multiple tabs with different usernames to chat.');
+        console.log('🔍 Use the "Find" tab to discover registered users.');
         console.log('📹 Voice & Video calls work between tabs via WebRTC.');
-        console.log('📁 Data stored in localStorage per user.');
         console.log('💚 Status updates expire after 24 hours.');
+        console.log('💾 All data stored in localStorage per user.');
     </script>
 
 </body>
