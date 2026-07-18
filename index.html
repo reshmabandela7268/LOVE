@@ -1490,13 +1490,13 @@
                 <h1>FriendVerse</h1>
                 <p class="sub">Chat · Voice · Video · Status · Photos</p>
                 <form id="loginForm">
-                    <label for="usernameInput">Username</label>
-                    <input type="text" id="usernameInput" placeholder="Choose a username" required />
+                    <label for="usernameInput">Mobile Number / Username</label>
+                    <input type="text" id="usernameInput" placeholder="Enter your mobile number or username" required />
                     <label for="passwordInput">Password</label>
                     <input type="password" id="passwordInput" placeholder="Min 4 characters" required minlength="4" />
                     <div class="login-error" id="loginError">Invalid credentials.</div>
                     <button type="submit" class="btn-primary" id="loginBtn"><i class="fas fa-sign-in-alt"></i> Sign In</button>
-                    <div class="hint"><i class="fas fa-info-circle"></i> Open multiple tabs with different usernames to chat in real-time!</div>
+                    <div class="hint"><i class="fas fa-info-circle"></i> Open multiple tabs with different numbers to chat!</div>
                 </form>
             </div>
         </div>
@@ -1533,7 +1533,7 @@
             <!-- SEARCH -->
             <div class="search-wrap">
                 <span class="search-icon"><i class="fas fa-search"></i></span>
-                <input type="text" id="searchInput" placeholder="Search or start a new chat" />
+                <input type="text" id="searchInput" placeholder="Search by name or number..." />
                 <span class="clear-btn" id="searchClear"><i class="fas fa-times-circle"></i></span>
             </div>
 
@@ -1679,8 +1679,9 @@
 
     <script>
         // ============================================================
-        // FRIENDVERSE — WhatsApp-style Multi-tab Chat & Calls
-        // FIXED: Search now works in ALL tabs including "Find"
+        // FRIENDVERSE — FIXED: Search shows ALL registered users
+        // Login with mobile number (any string) works perfectly.
+        // Users sync across tabs via BroadcastChannel.
         // ============================================================
 
         // ----- DOM refs -----
@@ -1892,6 +1893,7 @@
             } catch (e) { console.warn(e); }
         }
 
+        // ----- Load all profiles from localStorage (called on login and tab switch) -----
         function loadAllProfiles() {
             try {
                 const keys = Object.keys(localStorage).filter(k => k.startsWith('fv_'));
@@ -1917,38 +1919,57 @@
             } catch (e) { console.warn(e); }
         }
 
-        // ----- Seed default users -----
+        // ----- Seed default users (only if no other users exist) -----
         function seedDefaultUsers() {
-            const defaults = ['Alice', 'Bob', 'Charlie', 'Diana', 'Eve', 'Frank', 'Grace', 'Henry'];
+            // Only seed if there are no users besides the current user
+            const others = [...registeredUsers].filter(u => u !== currentUser);
+            if (others.length > 0) return;
+
+            const defaults = ['Alice', 'Bob', 'Charlie', 'Diana', 'Eve', 'Frank', 'Grace', 'Henry', '+1234567890',
+                '+9876543210'
+            ];
+            let seeded = 0;
             for (const u of defaults) {
-                if (u !== currentUser) {
+                if (u !== currentUser && !registeredUsers.has(u)) {
                     registeredUsers.add(u);
                     if (!userProfiles[u]) {
-                        userProfiles[u] = { name: u, status: 'Hey there!', photo: null };
+                        userProfiles[u] = { name: u, status: 'Hey there! 👋', photo: null };
                     }
+                    // Randomly mark some as online for demo
                     if (Math.random() > 0.4) onlineUsers.add(u);
+                    seeded++;
                 }
             }
+
+            if (seeded === 0) return;
+
+            // Save seeded users to localStorage so they persist
+            for (const u of [...registeredUsers].filter(u => u !== currentUser)) {
+                const data = {
+                    userProfiles: { [u]: userProfiles[u] || { name: u, status: 'Hey there! 👋', photo: null } },
+                    statuses: statuses[u] ? { [u]: statuses[u] } : {}
+                };
+                try { localStorage.setItem('fv_' + u, JSON.stringify(data)); } catch (e) {}
+            }
+
+            // Also add some statuses for demo
             const now = Date.now();
-            for (const u of defaults) {
-                if (u !== currentUser && Math.random() > 0.5) {
+            for (const u of [...registeredUsers].filter(u => u !== currentUser)) {
+                if (!statuses[u] && Math.random() > 0.5) {
                     statuses[u] = {
                         type: 'text',
                         text: 'Having a great day! 😊',
                         photo: null,
                         timestamp: now - Math.random() * 3600000
                     };
-                }
-            }
-            for (const u of defaults) {
-                if (u !== currentUser) {
-                    const data = {
-                        userProfiles: { [u]: userProfiles[u] },
-                        statuses: statuses[u] ? { [u]: statuses[u] } : {}
-                    };
+                    // Save it
+                    const data = JSON.parse(localStorage.getItem('fv_' + u) || '{}');
+                    data.statuses = { [u]: statuses[u] };
                     try { localStorage.setItem('fv_' + u, JSON.stringify(data)); } catch (e) {}
                 }
             }
+
+            showToast('✨ Found ' + seeded + ' friends to connect with!', 'success', 3000);
         }
 
         // ----- BroadcastChannel -----
@@ -2024,9 +2045,21 @@
                     handleBusy(data);
                     break;
                 case 'new_user':
-                    // A new user signed in elsewhere, add them
-                    registeredUsers.add(from);
-                    renderUsers();
+                    // A new user signed in elsewhere — add them
+                    if (from !== currentUser && !registeredUsers.has(from)) {
+                        registeredUsers.add(from);
+                        // Try to load their profile
+                        const raw = localStorage.getItem('fv_' + from);
+                        if (raw) {
+                            try {
+                                const d = JSON.parse(raw);
+                                if (d.userProfiles && d.userProfiles[from]) {
+                                    userProfiles[from] = d.userProfiles[from];
+                                }
+                            } catch (e) {}
+                        }
+                        renderUsers();
+                    }
                     break;
                 case 'ping':
                     broadcast({ type: 'pong', from: currentUser });
@@ -2039,7 +2072,6 @@
         // ----- Online status -----
         function sendOnline() {
             broadcast({ type: 'online', from: currentUser });
-            // Announce ourselves as a new user to other tabs
             broadcast({ type: 'new_user', from: currentUser });
         }
 
@@ -2072,7 +2104,7 @@
                 60 * 60 * 1000);
             }
 
-            // --- FIX: Apply search filter to ALL tabs, including 'find' ---
+            // --- Apply search filter to ALL tabs ---
             if (search) {
                 users = users.filter(u =>
                     getDisplayName(u).toLowerCase().includes(search) ||
@@ -2121,6 +2153,17 @@
                     after);
                 }
 
+                // Also highlight if the username (phone number) matches
+                let userHtml = escapeHtml(u);
+                if (search && u.toLowerCase().includes(search) && u !== displayName) {
+                    const idx = u.toLowerCase().indexOf(search);
+                    const before = u.substring(0, idx);
+                    const match = u.substring(idx, idx + search.length);
+                    const after = u.substring(idx + search.length);
+                    userHtml = escapeHtml(before) + `<span class="highlight">${escapeHtml(match)}</span>` + escapeHtml(
+                    after);
+                }
+
                 html += `
               <div class="user-item ${active ? 'active' : ''}" data-user="${u}">
                 <div class="avatar">
@@ -2130,6 +2173,7 @@
                 <div class="info">
                   <div class="name">${nameHtml} ${hasStatus ? '<span class="status-badge">●</span>' : ''}</div>
                   <div class="last">${lastText ? `<span class="sender">${lastSender}</span>${escapeHtml(lastText)}` : (tab === 'find' ? (on ? '🟢 Online' : '⚪ Offline') : 'Start chatting...')}</div>
+                  ${tab === 'find' && u !== displayName ? `<div style="font-size:11px;color:#4a5568;">${userHtml}</div>` : ''}
                 </div>
                 <div class="meta">
                   ${lastTime ? `<div class="time">${lastTime}</div>` : ''}
@@ -2144,7 +2188,7 @@
                 let msg = '';
                 if (tab === 'find') {
                     msg = search ?
-                        `No users found matching "<strong>${escapeHtml(search)}</strong>". Try a different name.` :
+                        `No users found matching "<strong>${escapeHtml(search)}</strong>". Try a different name or number.` :
                         'No users found. Open another tab with a different username to see them here.';
                 } else if (tab === 'chats') {
                     msg = search ?
@@ -3080,11 +3124,16 @@
                 btn.classList.add('active');
                 activeTab = btn.dataset.tab;
                 if (activeTab === 'find') {
-                    searchInput.placeholder = 'Search for users...';
+                    searchInput.placeholder = 'Search by name or number...';
+                    // Reload all profiles from localStorage
                     loadAllProfiles();
-                    if (registeredUsers.size === 0) seedDefaultUsers();
+                    // If still no other users, seed defaults
+                    const others = [...registeredUsers].filter(u => u !== currentUser);
+                    if (others.length === 0) {
+                        seedDefaultUsers();
+                    }
                 } else if (activeTab === 'chats') {
-                    searchInput.placeholder = 'Search or start a new chat';
+                    searchInput.placeholder = 'Search chats...';
                 } else {
                     searchInput.placeholder = 'Search...';
                 }
@@ -3134,8 +3183,8 @@
                 loginError.style.display = 'block';
                 return;
             }
-            if (username.length < 2 || username.length > 20) {
-                loginError.textContent = 'Username must be 2–20 characters.';
+            if (username.length < 2 || username.length > 30) {
+                loginError.textContent = 'Username must be 2–30 characters.';
                 loginError.style.display = 'block';
                 return;
             }
@@ -3154,15 +3203,25 @@
                 loginBtn.disabled = false;
                 loginBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Sign In';
 
+                // Add current user
                 registeredUsers.add(username);
+
+                // Init channel
                 initChannel();
+
+                // Load data for current user
                 loadData();
+
+                // Load all profiles from localStorage (other users)
                 loadAllProfiles();
 
-                if (registeredUsers.size === 0) {
+                // If no other users exist, seed default users
+                const others = [...registeredUsers].filter(u => u !== currentUser);
+                if (others.length === 0) {
                     seedDefaultUsers();
                 }
 
+                // Ensure current user has a profile
                 if (!userProfiles[currentUser]) {
                     userProfiles[currentUser] = { name: currentUser, status: 'Hey there!', photo: null };
                     saveData();
@@ -3172,7 +3231,7 @@
                 loginScreen.classList.add('hidden');
                 mainApp.classList.add('visible');
 
-                // Announce ourselves as online AND as a new user
+                // Announce ourselves
                 sendOnline();
                 broadcast({ type: 'new_user', from: currentUser });
                 broadcast({ type: 'ping', from: currentUser });
@@ -3190,6 +3249,7 @@
                         `<div class="empty-state"><i class="fas fa-comment-dots"></i><p>Select a friend to start chatting</p></div>`;
                 }
 
+                // Periodic online ping
                 setInterval(() => { if (currentUser) sendOnline(); }, 30000);
 
                 window.addEventListener('beforeunload', () => {
@@ -3207,13 +3267,13 @@
         msgInput.style.height = 'auto';
         usernameInput.focus();
 
-        console.log('🚀 FriendVerse — WhatsApp-style Chat & Calls (SEARCH FIXED)');
-        console.log('📌 Search now works in ALL tabs including "Find"');
-        console.log('📌 Open multiple tabs with different usernames to chat.');
+        console.log('🚀 FriendVerse — FIXED: Search shows ALL registered users');
+        console.log('📌 Login with any mobile number or username.');
+        console.log('📌 Users sync across tabs automatically.');
+        console.log('🔍 Search by name or phone number in ANY tab.');
         console.log('📹 Voice/Video calls work between tabs via WebRTC.');
         console.log('💚 Status updates expire after 24 hours.');
         console.log('📱 Fully responsive — works great on mobile.');
-        console.log('🔍 Use the "Find" tab to search for any registered user.');
     </script>
 
 </body>
